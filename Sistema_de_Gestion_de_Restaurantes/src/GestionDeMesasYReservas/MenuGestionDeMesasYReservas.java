@@ -1,29 +1,35 @@
 package GestionDeMesasYReservas;
+
 import GestionDeMeseros.Mesero;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MenuGestionDeMesasYReservas {
-    //Atributos
+
+    // Lista de mesas del restaurante
     private ArrayList<Mesa> mesas;
+
+    // Lista de meseros disponibles en el sistema
     private ArrayList<Mesero> meseros;
+
+    // Scanner para entrada de datos por consola
     private Scanner sc;
 
-    //Constructor
+    // Constructor: recibe listas existentes de mesas y meseros
     public MenuGestionDeMesasYReservas(ArrayList<Mesa> mesas, ArrayList<Mesero> meseros) {
         this.mesas = mesas;
         this.meseros = meseros;
         this.sc = new Scanner(System.in);
     }
 
-    //Inicio de Menu
+    // Inicia el menú principal de gestión de mesas y reservas
     public void iniciarMenu() {
 
         int opcion;
 
         do {
-            //Interfaz del menu
+            // Interfaz del menú
             System.out.println("\n===== GESTION DE MESAS Y RESERVAS =====");
             System.out.println("1. Registrar mesa");
             System.out.println("2. Mostrar mesas");
@@ -33,8 +39,10 @@ public class MenuGestionDeMesasYReservas {
             System.out.println("6. Eliminar mesa");
             System.out.println("7. Volver al menu principal");
             System.out.print("Seleccione una opcion: ");
+
             opcion = leerEntero();
 
+            // Ejecución de opciones del menú
             switch (opcion) {
 
                 case 1:
@@ -67,75 +75,60 @@ public class MenuGestionDeMesasYReservas {
 
                 default:
                     System.out.println("Opcion invalida.");
-
             }
 
         } while (opcion != 7);
-
     }
-    
-    //Métodos
+
+    // Busca una mesa por su número
     private Mesa buscarPorNumero(int numero) {
 
         for (Mesa mesa : mesas) {
-
             if (mesa.getNumero() == numero) {
                 return mesa;
             }
-
         }
 
         return null;
-
     }
 
+    // Lee un número entero de forma segura
     private int leerEntero() {
 
         while (true) {
-
             try {
-
                 return Integer.parseInt(sc.nextLine());
-
             } catch (NumberFormatException e) {
-
                 System.out.print("Ingrese un numero valido: ");
-
             }
-
         }
-
     }
 
+    // Lee una hora en formato HH:mm de forma segura
     private LocalTime leerHora() {
 
         while (true) {
-
             try {
-
                 return LocalTime.parse(sc.nextLine());
-
             } catch (Exception e) {
-
                 System.out.print("Formato incorrecto. Ingrese la hora (HH:mm): ");
-
             }
-
         }
-
     }
-    
+
+    // Busca el mesero que tenga asignada una mesa específica
     private Mesero buscarMeseroPorMesa(Mesa mesa) {
 
-    for (Mesero m : meseros) {
-        if (m.getMesasAsignadas().contains(mesa)) {
-            return m;
+        for (Mesero m : meseros) {
+            if (m.getMesasAsignadas().contains(mesa)) {
+                return m;
+            }
         }
+
+        return null;
     }
 
-    return null;}
-
-    // ---------------- OPCIÓN 1 ----------------
+    // ---------------- OPCIÓN 1: REGISTRAR MESA ----------------
     private void registrarMesa() {
 
         try {
@@ -145,16 +138,18 @@ public class MenuGestionDeMesasYReservas {
             System.out.print("Numero de mesa: ");
             mesa.setNumero(leerEntero());
 
+            // Validar que no exista otra mesa con el mismo número
             if (buscarPorNumero(mesa.getNumero()) != null) {
                 System.out.println("Ya existe una mesa con ese numero.");
                 return;
             }
 
-            // Solo pedir capacidad si la mesa es nueva
+            // Si es una mesa nueva mayor a 10, se pide capacidad manual
             if (mesa.getNumero() > 10) {
                 System.out.print("Capacidad: ");
                 mesa.setCapacidad(leerEntero());
             } else {
+                // Mesas pequeñas tienen capacidad predeterminada
                 System.out.println("La mesa " + mesa.getNumero()
                         + " tiene una capacidad predeterminada de "
                         + mesa.getCapacidad() + " personas.");
@@ -165,37 +160,31 @@ public class MenuGestionDeMesasYReservas {
             System.out.println("Mesa registrada correctamente.");
 
         } catch (Exception e) {
-
             System.out.println(e.getMessage());
-
         }
-
     }
 
-    // ---------------- OPCIÓN 2 ----------------
+    // ---------------- OPCIÓN 2: MOSTRAR MESAS ----------------
     private void mostrarMesas() {
 
         if (mesas.isEmpty()) {
-
             System.out.println("No existen mesas registradas.");
             return;
-
         }
 
+        // Muestra todas las mesas y su estado
         for (Mesa mesa : mesas) {
 
             System.out.println(mesa);
 
+            // Si tiene reserva activa, la muestra también
             if (mesa.getReservaActiva() != null) {
-                System.out.println("   Reserva -> "
-                        + mesa.getReservaActiva());
+                System.out.println("   Reserva -> " + mesa.getReservaActiva());
             }
-
         }
-
     }
 
-    // ---------------- OPCIÓN 3 ----------------
+    // ---------------- OPCIÓN 3: BUSCAR MESA ----------------
     private void buscarMesa() {
 
         System.out.print("Numero de mesa: ");
@@ -205,22 +194,18 @@ public class MenuGestionDeMesasYReservas {
         Mesa mesa = buscarPorNumero(numero);
 
         if (mesa == null) {
-
             System.out.println("Mesa no encontrada.");
-
         } else {
-
             System.out.println(mesa);
 
+            // Mostrar reserva si existe
             if (mesa.getReservaActiva() != null) {
                 System.out.println(mesa.getReservaActiva());
             }
-
         }
-
     }
-    
-    // ---------------- OPCIÓN 4 ----------------
+
+    // ---------------- OPCIÓN 4: MODIFICAR MESA ----------------
     private void modificarMesa() {
 
         try {
@@ -244,6 +229,7 @@ public class MenuGestionDeMesasYReservas {
             switch (op) {
 
                 case 1:
+                    // Cambiar capacidad de la mesa
                     System.out.print("Nueva capacidad: ");
                     mesa.setCapacidad(leerEntero());
                     System.out.println("Capacidad actualizada.");
@@ -251,11 +237,13 @@ public class MenuGestionDeMesasYReservas {
 
                 case 2:
 
+                    // Liberar mesa completamente
                     mesa.setEstado(EstadoMesa.LIBRE);
                     mesa.setPersonasOcupando(0);
                     mesa.setReservaActiva(null);
                     mesa.setClienteActual(null);
 
+                    // Quitar mesa del mesero si estaba asignada
                     Mesero mesero = buscarMeseroPorMesa(mesa);
 
                     if (mesero != null) {
@@ -270,11 +258,11 @@ public class MenuGestionDeMesasYReservas {
             }
 
         } catch (Exception e) {
-        System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
-    
-    // ---------------- OPCIÓN 5 ----------------
+
+    // ---------------- OPCIÓN 5: REGISTRAR RESERVA ----------------
     private void registrarReserva() {
 
         try {
@@ -289,11 +277,13 @@ public class MenuGestionDeMesasYReservas {
                 return;
             }
 
+            // Verificar disponibilidad
             if (!mesa.estaDisponible()) {
                 System.out.println("La mesa no se encuentra disponible.");
                 return;
             }
 
+            // Crear nueva reserva
             Reserva reserva = new Reserva();
 
             System.out.print("Nombre del cliente: ");
@@ -302,19 +292,17 @@ public class MenuGestionDeMesasYReservas {
             System.out.print("Hora de llegada (HH:mm): ");
             reserva.setHoraLlegada(leerHora());
 
+            // Asignar reserva a la mesa
             mesa.setReservaActiva(reserva);
 
             System.out.println("Reserva registrada correctamente.");
 
         } catch (Exception e) {
-
             System.out.println(e.getMessage());
-
         }
-
     }
 
-    // ---------------- OPCIÓN 6 ----------------
+    // ---------------- OPCIÓN 6: ELIMINAR MESA ----------------
     private void eliminarMesa() {
 
         System.out.print("Numero de mesa: ");
@@ -330,6 +318,5 @@ public class MenuGestionDeMesasYReservas {
         mesas.remove(mesa);
 
         System.out.println("Mesa eliminada correctamente.");
-
     }
 }

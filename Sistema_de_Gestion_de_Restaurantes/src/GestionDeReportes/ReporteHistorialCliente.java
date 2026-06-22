@@ -8,30 +8,36 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ReporteHistorialCliente {
-    //Atributos
+
+    // Fecha en la que se genera el reporte
     private LocalDateTime fecha;
 
-    //Constructor
+    // Constructor: inicializa la fecha con el momento actual
     public ReporteHistorialCliente() {
         this.fecha = LocalDateTime.now();
     }
-    
-    //Get de la fecha
+
+    // Permite obtener la fecha del reporte
     public LocalDateTime getFecha() {
         return fecha;
     }
 
-    //Métodos
-    // HISTORIAL INDIVIDUAL (por si lo usas en otra parte)
-    public ArrayList<Pedido> obtenerHistorialCliente(ArrayList<Pedido> pedidos, Cliente cliente) {
+    // HISTORIAL INDIVIDUAL DE CLIENTE
+    // Devuelve todos los pedidos realizados por un cliente específico
+    public ArrayList<Pedido> obtenerHistorialCliente(ArrayList<Pedido> pedidos,
+                                                      Cliente cliente) {
 
+        // Validación de entrada
         if (pedidos == null || cliente == null) {
             throw new IllegalArgumentException("Datos inválidos.");
         }
 
+        // Lista donde se guardan los pedidos del cliente
         ArrayList<Pedido> resultado = new ArrayList<>();
 
+        // Filtra pedidos que pertenezcan al cliente indicado
         for (Pedido p : pedidos) {
+
             if (p != null && cliente.equals(p.getCliente())) {
                 resultado.add(p);
             }
@@ -40,26 +46,29 @@ public class ReporteHistorialCliente {
         return resultado;
     }
 
+    // Devuelve el historial como texto (usado para impresión rápida)
     public String filtrarPedidos(ArrayList<Pedido> pedidos, Cliente cliente) {
         return obtenerHistorialCliente(pedidos, cliente).toString();
     }
 
-    // 🔥 REPORTE GENERAL (EL QUE NECESITAS)
+    // REPORTE GENERAL DEL SISTEMA
+    // Genera un resumen global de clientes y consumo del restaurante
     public String generarReporteGeneral(ArrayList<Pedido> pedidos,
                                        ArrayList<Factura> facturas) {
 
+        // Validación de listas
         if (pedidos == null || facturas == null) {
             throw new IllegalArgumentException("Listas inválidas.");
         }
 
-        // 1. Clientes únicos que realmente comieron
+        // 1. Cantidad de clientes únicos que realizaron pedidos
         long clientesAtendidos = pedidos.stream()
-                .map(Pedido::getCliente)
-                .filter(Objects::nonNull)
-                .distinct()
-                .count();
+                .map(Pedido::getCliente)     // obtiene el cliente de cada pedido
+                .filter(Objects::nonNull)    // elimina valores nulos
+                .distinct()                  // elimina clientes repetidos
+                .count();                    // cuenta clientes únicos
 
-        // 2. Consumo total del restaurante
+        // 2. Consumo total del restaurante (suma de todas las facturas)
         double consumoTotal = facturas.stream()
                 .mapToDouble(Factura::getTotal)
                 .sum();
@@ -69,11 +78,14 @@ public class ReporteHistorialCliente {
                 ? 0
                 : consumoTotal / facturas.size();
 
+        // Construcción del reporte en texto
         StringBuilder sb = new StringBuilder();
 
         sb.append("Clientes que comieron: ").append(clientesAtendidos).append("\n");
         sb.append("Consumo total: ").append(consumoTotal).append("\n");
         sb.append("Consumo promedio: ").append(promedio).append("\n");
+
+        // Fecha del reporte (solo día)
         sb.append("Fecha: ").append(fecha.toLocalDate()).append("\n");
 
         return sb.toString();

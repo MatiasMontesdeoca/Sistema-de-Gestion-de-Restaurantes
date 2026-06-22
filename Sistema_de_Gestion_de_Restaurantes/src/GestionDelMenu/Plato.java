@@ -3,20 +3,26 @@ package GestionDelMenu;
 import java.util.Objects;
 
 public abstract class Plato {
-    //Atributos
+
+    // Nombre del plato (identificador principal)
     protected String nombre;
+
+    // Precio del plato
     protected double precio;
+
+    // Indica si el plato está disponible para ser pedido
     protected boolean disponible;
 
-    //Constructos
+    // Constructor vacío
     public Plato() {
     }
 
-    //Get y Set de nombre del plato
+    // Retorna el nombre del plato
     public String getNombre() {
         return nombre;
     }
 
+    // Asigna el nombre del plato con validación
     public void setNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre no puede ser nulo o vacio.");
@@ -24,11 +30,12 @@ public abstract class Plato {
         this.nombre = nombre.trim();
     }
 
-    //Get y Set del precio de un plato
+    // Retorna el precio del plato
     public double getPrecio() {
         return precio;
     }
 
+    // Asigna el precio del plato con validación (no puede ser negativo)
     public void setPrecio(double precio) {
         if (precio < 0) {
             throw new IllegalArgumentException("El precio no puede ser negativo.");
@@ -36,32 +43,35 @@ public abstract class Plato {
         this.precio = precio;
     }
 
-    //Get y Set la disponibilidad de un plato
+    // Retorna si el plato está disponible o no
     public boolean getDisponibilidad() {
         return disponible;
     }
 
+    // Cambia el estado de disponibilidad del plato
     public void setDisponibilidad(boolean disponible) {
         this.disponible = disponible;
     }
 
-    //Get de la categoria del plato
+    // Método abstracto: cada tipo de plato define su propia categoría
     public abstract CategoriaPlato getCategoria();
 
-    //Overrides
+    // Representación en texto del plato (útil para mostrar en consola)
     @Override
     public String toString() {
-        return  "Nombre: " + nombre +
+        return "Nombre: " + nombre +
                 ", Precio: " + precio +
                 ", Disponible: " + disponible +
                 ", Categoria: " + getCategoria();
     }
 
+    // Hash basado en el nombre (identificador lógico del plato)
     @Override
     public int hashCode() {
         return Objects.hash(nombre);
     }
 
+    // Dos platos se consideran iguales si tienen el mismo nombre
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

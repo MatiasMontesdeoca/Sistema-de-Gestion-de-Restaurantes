@@ -1,29 +1,35 @@
 package GestionDeClientes;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMesasYReservas.Mesa;
 
 public class MenuGestionDeClientes {
-    //Atributos
+
+    // Lista de clientes registrados en el sistema
     private ArrayList<Cliente> clientes;
+
+    // Lista de mesas disponibles del restaurante
     private ArrayList<Mesa> mesas;
+
+    // Scanner para entrada de datos por consola
     private Scanner sc;
 
-    //Constructor
+    // Constructor: recibe las listas existentes de clientes y mesas
     public MenuGestionDeClientes(ArrayList<Cliente> clientes, ArrayList<Mesa> mesas) {
         this.clientes = clientes;
         this.mesas = mesas;
         this.sc = new Scanner(System.in);
     }
 
-    //Inicio de Menu
+    // Inicia el menú principal de gestión de clientes
     public void iniciarMenu() {
-        
+
         int opcion;
 
         do {
-            //Interfaz del menu
+            // Menú de opciones
             System.out.println("\n===== GESTION DE CLIENTES =====");
             System.out.println("1. Registrar cliente");
             System.out.println("2. Sentar Cliente");
@@ -35,13 +41,14 @@ public class MenuGestionDeClientes {
 
             opcion = leerEntero();
 
+            // Ejecuta la opción seleccionada
             switch (opcion) {
                 case 1:
                     registrarCliente();
                     break;
                 case 2:
                     sentarCliente();
-                    break;    
+                    break;
                 case 3:
                     listarClientes();
                     break;
@@ -60,44 +67,37 @@ public class MenuGestionDeClientes {
         } while (opcion != 6);
     }
 
-    //Métodos    
+    // Lee un número entero de forma segura (evita errores de formato)
     private int leerEntero() {
-
         while (true) {
-
             try {
-
                 return Integer.parseInt(sc.nextLine());
-
             } catch (NumberFormatException e) {
-
                 System.out.print("Ingrese un numero valido: ");
-
             }
-
         }
+    }
 
-    }    
-    
+    // Verifica si ya existe un cliente con la misma cédula, teléfono o correo
     private boolean clienteExiste(String cedula, String telefono, String correo) {
 
-    for (Cliente c : clientes) {
+        for (Cliente c : clientes) {
 
-        if (c.getCedula().equals(cedula)) return true;
-        if (c.getTelefono().equals(telefono)) return true;
-        if (c.getCorreoElectronico().equalsIgnoreCase(correo)) return true;
+            if (c.getCedula().equals(cedula)) return true;
+            if (c.getTelefono().equals(telefono)) return true;
+            if (c.getCorreoElectronico().equalsIgnoreCase(correo)) return true;
+        }
+
+        return false;
     }
 
-    return false;
-    }
-
-
-    // ---------------- OPCIÓN 1 ----------------
+    // ---------------- OPCIÓN 1: REGISTRAR CLIENTE ----------------
     private void registrarCliente() {
 
         Cliente c = new Cliente();
 
         try {
+            // Captura de datos del cliente
             System.out.print("Cedula: ");
             c.setcedula(sc.nextLine().trim());
 
@@ -111,20 +111,23 @@ public class MenuGestionDeClientes {
             c.setCorreoElectronico(sc.nextLine().trim());
 
         } catch (IllegalArgumentException e) {
+            // Manejo de errores de validación en setters
             System.out.println("Error de datos: " + e.getMessage());
             return;
         }
 
+        // Validación de duplicados
         if (clienteExiste(c.getCedula(), c.getTelefono(), c.getCorreoElectronico())) {
             System.out.println("Error: ya existe un cliente con esa cedula, telefono o correo.");
             return;
         }
 
+        // Agrega cliente a la lista
         clientes.add(c);
         System.out.println("Cliente registrado correctamente.");
     }
- 
-    // ---------------- OPCIÓN 2 ----------------
+
+    // ---------------- OPCIÓN 2: SENTAR CLIENTE EN MESA ----------------
     private void sentarCliente() {
 
         System.out.print("Cedula del cliente: ");
@@ -132,6 +135,7 @@ public class MenuGestionDeClientes {
 
         Cliente cliente = null;
 
+        // Buscar cliente por cédula
         for (Cliente c : clientes) {
             if (c.getCedula().equals(cedula)) {
                 cliente = c;
@@ -149,6 +153,7 @@ public class MenuGestionDeClientes {
 
         Mesa mesa = null;
 
+        // Buscar mesa por número
         for (Mesa m : mesas) {
             if (m.getNumero() == numeroMesa) {
                 mesa = m;
@@ -161,6 +166,7 @@ public class MenuGestionDeClientes {
             return;
         }
 
+        // Verificar disponibilidad de la mesa
         if (mesa.getEstado() == EstadoMesa.OCUPADA) {
             System.out.println("La mesa ya está ocupada.");
             return;
@@ -169,24 +175,24 @@ public class MenuGestionDeClientes {
         System.out.print("Cantidad de personas: ");
         int personas = Integer.parseInt(sc.nextLine());
 
+        // Validar capacidad de la mesa
         if (personas <= 0 || personas > mesa.getCapacidad()) {
             System.out.println("Cantidad inválida para la capacidad de la mesa.");
             return;
         }
 
-        // CAMBIO DE ESTADO DE MESA
+        // Asignar cliente a la mesa
         mesa.setEstado(EstadoMesa.OCUPADA);
         mesa.setPersonasOcupando(personas);
         mesa.setClienteActual(cliente);
 
-        // incrementar visitas automáticamente
+        // Incrementar visitas del cliente automáticamente
         cliente.incrementarVisitas();
 
         System.out.println("Cliente sentado correctamente en la mesa.");
     }
- 
-    
-    // ---------------- OPCIÓN 3 ----------------
+
+    // ---------------- OPCIÓN 3: LISTAR CLIENTES ----------------
     private void listarClientes() {
 
         System.out.println("\n--- LISTA DE CLIENTES ---");
@@ -196,21 +202,25 @@ public class MenuGestionDeClientes {
             return;
         }
 
+        // Mostrar todos los clientes
         for (Cliente c : clientes) {
             System.out.println(c);
         }
     }
 
-    // ---------------- OPCIÓN 4 ----------------
+    // ---------------- OPCIÓN 4: BUSCAR CLIENTE POR CÉDULA ----------------
     private void buscarClientePorcedula() {
 
         System.out.print("Ingrese cedula: ");
         String cedula = sc.nextLine().trim();
 
-         if (!cedula.matches("\\d{10}")) {
-        System.out.println("La cedula ingresada debe contener 10 digitos numericos.");
-        return;}
-        
+        // Validación básica de formato de cédula
+        if (!cedula.matches("\\d{10}")) {
+            System.out.println("La cedula ingresada debe contener 10 digitos numericos.");
+            return;
+        }
+
+        // Buscar cliente
         for (Cliente c : clientes) {
             if (c.getCedula().equals(cedula)) {
                 System.out.println("Cliente encontrado:");
@@ -222,15 +232,17 @@ public class MenuGestionDeClientes {
         System.out.println("Cliente no encontrado.");
     }
 
-    // ---------------- OPCIÓN 5 ----------------
+    // ---------------- OPCIÓN 5: VERIFICAR DESCUENTO ----------------
     private void verificarDescuentoCliente() {
 
         System.out.print("Cedula del cliente: ");
         String cedula = sc.nextLine();
 
+        // Buscar cliente
         for (Cliente c : clientes) {
             if (c.getCedula().equalsIgnoreCase(cedula)) {
 
+                // Verificar si tiene descuentos disponibles
                 if (c.tieneDescuentoDisponible()) {
                     System.out.println("El cliente tiene descuento disponible.");
                 } else {

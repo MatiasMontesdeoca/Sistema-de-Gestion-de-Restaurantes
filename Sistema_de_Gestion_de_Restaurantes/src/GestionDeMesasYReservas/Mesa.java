@@ -4,24 +4,36 @@ import GestionDeClientes.Cliente;
 import java.util.Objects;
 
 public class Mesa {
-    //Atributos
+
+    // Identificador numérico de la mesa
     private int numero;
+
+    // Capacidad máxima de personas que puede tener la mesa
     private int capacidad;
+
+    // Estado actual de la mesa (LIBRE, OCUPADA, RESERVADA)
     private EstadoMesa estado;
+
+    // Reserva activa asociada a la mesa (si existe)
     private Reserva reservaActiva;
+
+    // Número de personas actualmente ocupando la mesa
     private int personasOcupando;
+
+    // Cliente actualmente sentado en la mesa
     private Cliente clienteActual;
-    
-    //Constructor para dejar las mesas en estado libre al iniciar el programa
+
+    // Constructor: inicializa la mesa como LIBRE al crearla
     public Mesa() {
         this.estado = EstadoMesa.LIBRE;
     }
 
-    //Get y Set de numero de la mesa
+    // Obtiene el número de la mesa
     public int getNumero() {
         return numero;
     }
 
+    // Establece el número de la mesa y asigna capacidad predeterminada según rango
     public void setNumero(int numero) {
 
         if (numero <= 0) {
@@ -30,7 +42,7 @@ public class Mesa {
 
         this.numero = numero;
 
-        // Capacidades predeterminadas únicamente para las mesas iniciales
+        // Asignación automática de capacidad para mesas predefinidas
         switch (numero) {
 
             case 1:
@@ -59,17 +71,18 @@ public class Mesa {
                 break;
 
             default:
-                // Las mesas nuevas no tienen capacidad asignada, eso se las asigna al crearlas en el MenuGestionDeMesasYReservas.
+                // Mesas nuevas deben definir su capacidad manualmente
                 capacidad = 0;
         }
     }
 
-    //Get y Set de capacidad de la mesa
+    // Obtiene la capacidad de la mesa
     public int getCapacidad() {
         return capacidad;
     }
-    
-    public void setCapacidad(int capacidad){
+
+    // Establece la capacidad de la mesa con validación
+    public void setCapacidad(int capacidad) {
         if (capacidad <= 0) {
             throw new IllegalArgumentException("La capacidad debe ser mayor que cero.");
         }
@@ -77,11 +90,12 @@ public class Mesa {
         this.capacidad = capacidad;
     }
 
-    //Get y set del estado de la mesa (Libre, Ocupada o Reservada)
+    // Obtiene el estado actual de la mesa
     public EstadoMesa getEstado() {
         return estado;
     }
 
+    // Establece el estado de la mesa (LIBRE, OCUPADA, RESERVADA)
     public void setEstado(EstadoMesa estado) {
         if (estado == null) {
             throw new IllegalArgumentException("El estado no puede ser nulo.");
@@ -89,11 +103,12 @@ public class Mesa {
         this.estado = estado;
     }
 
-    //Get y Set para reservaActiva de una mesa
+    // Obtiene la reserva activa de la mesa
     public Reserva getReservaActiva() {
         return reservaActiva;
     }
 
+    // Asigna una reserva a la mesa y cambia su estado a RESERVADA
     public void setReservaActiva(Reserva reservaActiva) {
         this.reservaActiva = reservaActiva;
 
@@ -101,42 +116,44 @@ public class Mesa {
             this.estado = EstadoMesa.RESERVADA;
         }
     }
-    
-    //Get y Set para personasOcupando la mesa
+
+    // Obtiene cuántas personas están ocupando la mesa
     public int getPersonasOcupando() {
-    return personasOcupando;
+        return personasOcupando;
     }
 
+    // Define cuántas personas están en la mesa
     public void setPersonasOcupando(int personasOcupando) {
         this.personasOcupando = personasOcupando;
     }
-    
-    //Get y Set del clienteActual sentado en la mesa
+
+    // Obtiene el cliente actualmente sentado en la mesa
     public Cliente getClienteActual() {
-    return clienteActual;
+        return clienteActual;
     }
 
+    // Asigna el cliente actual a la mesa
     public void setClienteActual(Cliente clienteActual) {
-    this.clienteActual = clienteActual;
+        this.clienteActual = clienteActual;
     }
 
-    //Método para librerar la mesa
+    // Verifica si la mesa está disponible (LIBRE)
     public boolean estaDisponible() {
-        this.reservaActiva = null;
+        this.reservaActiva = null; // elimina reserva activa al consultar disponibilidad
         return estado == EstadoMesa.LIBRE;
     }
 
-    //Método para reservar la mesa
+    // Verifica si la mesa está reservada
     public boolean estaReservada() {
         return estado == EstadoMesa.RESERVADA;
     }
 
-    //Método para ocupar la mesa
+    // Verifica si la mesa está ocupada
     public boolean estaOcupada() {
         return estado == EstadoMesa.OCUPADA;
     }
 
-    //Overrides
+    // Representación en texto de la mesa
     @Override
     public String toString() {
         return "Mesa #" + numero +
@@ -144,11 +161,13 @@ public class Mesa {
                ", Estado: " + estado;
     }
 
+    // Hash basado en el número de mesa (identificador único)
     @Override
     public int hashCode() {
         return Objects.hash(numero);
     }
 
+    // Dos mesas son iguales si tienen el mismo número
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -157,5 +176,4 @@ public class Mesa {
         Mesa other = (Mesa) obj;
         return numero == other.numero;
     }
-
 }

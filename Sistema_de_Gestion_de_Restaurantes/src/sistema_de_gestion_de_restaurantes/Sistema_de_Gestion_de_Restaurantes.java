@@ -19,8 +19,10 @@ import java.util.Scanner;
 
 public class Sistema_de_Gestion_de_Restaurantes {
 
-    public static void main(String[] args) {        
-       // ===== Listas compartidas =====
+    public static void main(String[] args) {
+
+        // Listas globales compartidas por todo el sistema
+        // Aquí se almacenan todos los datos del restaurante en memoria
         ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Mesero> meseros = new ArrayList<>();
         ArrayList<Mesa> mesas = new ArrayList<>();
@@ -28,26 +30,34 @@ public class Sistema_de_Gestion_de_Restaurantes {
         ArrayList<Pedido> pedidos = new ArrayList<>();
         ArrayList<Factura> facturas = new ArrayList<>();
         ArrayList<DetallePedido> detalles = new ArrayList<>();
-        
+
+        // Se crean 10 mesas iniciales con números del 1 al 10
+        // Estas mesas forman la configuración base del restaurante
         for (int i = 1; i <= 10; i++) {
             Mesa mesa = new Mesa();
             mesa.setNumero(i);
             mesas.add(mesa);
         }
 
-        // ===== Menús =====
+        // ===================== MENÚS DEL SISTEMA =====================
+
+        // Módulo de gestión de clientes (registro, búsqueda, etc.)
         MenuGestionDeClientes menuClientes =
                 new MenuGestionDeClientes(clientes, mesas);
 
+        // Módulo de gestión de meseros (asignación de mesas, control de carga)
         MenuGestionDeMeseros menuMeseros =
                 new MenuGestionDeMeseros(meseros, mesas);
 
+        // Módulo de mesas y reservas
         MenuGestionDeMesasYReservas menuMesas =
                 new MenuGestionDeMesasYReservas(mesas, meseros);
 
+        // Módulo de gestión del menú (platos del restaurante)
         MenuGestionDelMenu menuMenu =
                 new MenuGestionDelMenu(platos);
 
+        // Módulo de pedidos (crear, editar, gestionar estados)
         MenuGestionDePedidos menuPedidos =
                 new MenuGestionDePedidos(
                         pedidos,
@@ -56,19 +66,23 @@ public class Sistema_de_Gestion_de_Restaurantes {
                         mesas,
                         platos);
 
+        // Módulo de facturación y pagos
         MenuFacturacionYPagos menuFacturacion =
                 new MenuFacturacionYPagos(pedidos, facturas);
 
+        // Módulo de reportes (ventas, platos, mesas, etc.)
         MenuReportes menuReportes =
                 new MenuReportes(
                         facturas,
                         pedidos,
                         detalles);
 
+        // Scanner principal para leer opciones del menú principal
         Scanner teclado = new Scanner(System.in);
 
         int opcion;
 
+        // Bucle principal del sistema (menú general)
         do {
 
             System.out.println("\n======================================");
@@ -84,52 +98,38 @@ public class Sistema_de_Gestion_de_Restaurantes {
             System.out.println("8. Salir del sistema");
             System.out.print("Seleccione una opcion: ");
 
+            // Lectura segura de la opción del usuario
             try {
                 opcion = Integer.parseInt(teclado.nextLine());
             } catch (NumberFormatException e) {
-                opcion = -1;
+                opcion = -1; // Si hay error, fuerza opción inválida
             }
 
+            // Navegación entre módulos del sistema
             switch (opcion) {
 
-                case 1:
-                    menuClientes.iniciarMenu();
-                    break;
+                case 1 -> menuClientes.iniciarMenu();
 
-                case 2:
-                    menuMeseros.iniciarMenu();
-                    break;
+                case 2 -> menuMeseros.iniciarMenu();
 
-                case 3:
-                    menuMesas.iniciarMenu();
-                    break;
+                case 3 -> menuMesas.iniciarMenu();
 
-                case 4:
-                    menuMenu.iniciarMenu();
-                    break;
+                case 4 -> menuMenu.iniciarMenu();
 
-                case 5:
-                    menuPedidos.iniciarMenu();
-                    break;
+                case 5 -> menuPedidos.iniciarMenu();
 
-                case 6:
-                    menuFacturacion.iniciarMenu();
-                    break;
+                case 6 -> menuFacturacion.iniciarMenu();
 
-                case 7:
-                    menuReportes.iniciarMenu();
-                    break;
+                case 7 -> menuReportes.iniciarMenu();
 
-                case 8:
-                    System.out.println("Gracias por utilizar el sistema.");
-                    break;
+                case 8 -> System.out.println("Gracias por utilizar el sistema.");
 
-                default:
-                    System.out.println("Opcion invalida.");
+                default -> System.out.println("Opcion invalida.");
             }
 
         } while (opcion != 8);
 
+        // Cierre del scanner para liberar recursos
         teclado.close();
     }
 }

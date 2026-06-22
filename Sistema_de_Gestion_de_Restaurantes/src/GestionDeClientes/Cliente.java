@@ -1,59 +1,64 @@
 package GestionDeClientes;
+
 import java.util.Objects;
 
-public class Cliente extends Persona{
-    //Atributos
+public class Cliente extends Persona {
+
+    // Atributos
     private String telefono;
     private String correoElectronico;
     private int visitasMes;
     private int descuentosDisponibles;
 
-    //Constructor
+    // Constructor vacío
     public Cliente() {
     }
 
-    //Get y Set de Telefono
+    // Obtiene el teléfono del cliente
     public String getTelefono() {
         return telefono;
     }
 
+    // Establece el teléfono del cliente con validación
     public void setTelefono(String telefono) {
         telefono = telefono.trim();
-        
+
         if (telefono == null || telefono.isEmpty()) {
             throw new IllegalArgumentException("El telefono no puede ser nulo o vacio.");
         }
-        if (!telefono.matches("\\d{10}")){
+        if (!telefono.matches("\\d{10}")) {
             throw new IllegalArgumentException("El numero de telefono ingresado debe contener 10 digitos numericos");
         }
         this.telefono = telefono;
     }
-    
-    //Get y Set de correoElectronico
+
+    // Obtiene el correo electrónico del cliente
     public String getCorreoElectronico() {
         return correoElectronico;
     }
 
+    // Establece el correo electrónico con validación de formato
     public void setCorreoElectronico(String correoElectronico) {
         if (correoElectronico == null || correoElectronico.trim().isEmpty()) {
             throw new IllegalArgumentException("El correo electrónico no puede ser nulo o vacío.");
         }
-        
+
         String correo = correoElectronico.trim();
-        
         String regex = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
-        
+
         if (!correo.matches(regex)) {
-        throw new IllegalArgumentException("Formato de correo electronico invalido.");
+            throw new IllegalArgumentException("Formato de correo electronico invalido.");
         }
-        this.correoElectronico = correoElectronico.trim();
+
+        this.correoElectronico = correo;
     }
 
-    //Get y Set de visitasMes
+    // Obtiene el número de visitas del mes
     public int getVisitasMes() {
         return visitasMes;
     }
 
+    // Establece el número de visitas del mes
     public void setVisitasMes(int visitasMes) {
         if (visitasMes < 0) {
             throw new IllegalArgumentException("Las visitas no pueden ser negativas.");
@@ -61,15 +66,17 @@ public class Cliente extends Persona{
         this.visitasMes = visitasMes;
     }
 
+    // Incrementa en 1 las visitas del cliente
     public void incrementarVisitas() {
         this.visitasMes++;
     }
 
-    //Get y Set de descuentosDisponibles 
+    // Obtiene los descuentos disponibles
     public int getDescuentosDisponibles() {
         return descuentosDisponibles;
     }
 
+    // Establece los descuentos disponibles
     public void setDescuentosDisponibles(int descuentosDisponibles) {
         if (descuentosDisponibles < 0) {
             throw new IllegalArgumentException("Los descuentos no pueden ser negativos.");
@@ -77,7 +84,7 @@ public class Cliente extends Persona{
         this.descuentosDisponibles = descuentosDisponibles;
     }
 
-    //Métodos
+    // Consume un descuento de fidelidad si está disponible
     public void consumirDescuentoFidelidad() {
         if (descuentosDisponibles <= 0) {
             throw new IllegalStateException("No hay descuentos disponibles.");
@@ -85,12 +92,12 @@ public class Cliente extends Persona{
         this.descuentosDisponibles--;
     }
 
+    // Verifica si el cliente tiene descuentos disponibles
     public boolean tieneDescuentoDisponible() {
         return descuentosDisponibles > 0;
     }
 
-    
-    //Overrides
+    // Representación en texto del objeto
     @Override
     public String toString() {
         return super.toString() +
@@ -100,11 +107,13 @@ public class Cliente extends Persona{
                 ", Descuentos: " + descuentosDisponibles;
     }
 
+    // Hash basado en teléfono y correo
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), telefono, correoElectronico);
     }
 
+    // Comparación entre clientes
     @Override
     public boolean equals(Object obj) {
         if (!super.equals(obj)) return false;

@@ -9,16 +9,29 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MenuGestionDePedidos {
-    //Atributos
+
+    // Lista de pedidos registrados en el sistema
     private ArrayList<Pedido> pedidos;
+
+    // Lista de clientes del sistema
     private ArrayList<Cliente> clientes;
+
+    // Lista de meseros disponibles
     private ArrayList<Mesero> meseros;
+
+    // Lista de mesas del restaurante
     private ArrayList<Mesa> mesas;
+
+    // Lista de platos del menú
     private ArrayList<Plato> platos;
+
+    // Scanner para entrada de datos por consola
     private Scanner sc;
+
+    // Contador para generar IDs de pedidos
     private int contadorPedidos = 1;
 
-    //Constructor
+    // Constructor: recibe todas las estructuras del sistema
     public MenuGestionDePedidos(ArrayList<Pedido> pedidos,
                                 ArrayList<Cliente> clientes,
                                 ArrayList<Mesero> meseros,
@@ -33,13 +46,14 @@ public class MenuGestionDePedidos {
         this.sc = new Scanner(System.in);
     }
 
-    //Inicio de Menu
+    // Inicia el menú principal de gestión de pedidos
     public void iniciarMenu() {
 
         int opcion;
 
         do {
-            //Interfaz del Menu
+
+            // Menú de opciones
             System.out.println("\n===== GESTION DE PEDIDOS =====");
             System.out.println("1. Registrar pedido");
             System.out.println("2. Editar pedido");
@@ -77,37 +91,34 @@ public class MenuGestionDePedidos {
             }
 
         } while (opcion != 5);
-
     }
-    
+
+    // Lee un entero desde consola con validación
     private int leerEntero() {
 
         while (true) {
 
             try {
-
                 return Integer.parseInt(sc.nextLine());
-
             } catch (NumberFormatException e) {
-
                 System.out.print("Ingrese un numero valido: ");
-
             }
-
-        }
-
-    }    
-    
-    private Pedido buscarPedidoPorMesa(Mesa mesa) {
-
-    for (Pedido p : pedidos) {
-        if (p.getMesa().equals(mesa)) {
-            return p;
         }
     }
 
-    return null;}
-    
+    // Busca un pedido activo asociado a una mesa específica
+    private Pedido buscarPedidoPorMesa(Mesa mesa) {
+
+        for (Pedido p : pedidos) {
+            if (p.getMesa().equals(mesa)) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
+    // Busca una mesa por número ingresado por el usuario
     private Mesa buscarMesa() {
 
         System.out.print("Numero de mesa: ");
@@ -121,7 +132,8 @@ public class MenuGestionDePedidos {
 
         return null;
     }
-    
+
+    // Agrega un plato al pedido seleccionado
     private void agregarPlato(Pedido pedido) {
 
         Plato plato = buscarPlato();
@@ -141,57 +153,66 @@ public class MenuGestionDePedidos {
 
         pedido.agregarPlato(plato, cantidad);
     }
-    
+
+    // Busca un plato por nombre dentro del menú
     private Plato buscarPlato() {
 
-    System.out.print("Nombre del plato: ");
-    String nombre = sc.nextLine();
+        System.out.print("Nombre del plato: ");
+        String nombre = sc.nextLine();
 
-    for (Plato plato : platos) {
+        for (Plato plato : platos) {
 
-        if (plato.getNombre().equalsIgnoreCase(nombre)) {
-            return plato;
+            if (plato.getNombre().equalsIgnoreCase(nombre)) {
+                return plato;
+            }
+        }
+
+        return null;
+    }
+
+    // Elimina un plato del pedido
+    private void eliminarPlato(Pedido pedido) {
+
+        Plato plato = buscarPlato();
+
+        if (plato == null) {
+            System.out.println("Plato no encontrado.");
+            return;
+        }
+
+        pedido.eliminarPlato(plato);
+
+        System.out.println("Plato eliminado del pedido.");
+    }
+
+    // Cambia el estado del pedido (PENDIENTE, PREPARANDO, LISTO, etc.)
+    private void cambiarEstado(Pedido pedido) {
+
+        System.out.println("Estados disponibles:");
+
+        for (EstadoPedido e : EstadoPedido.values()) {
+            System.out.println("- " + e);
+        }
+
+        System.out.print("Nuevo estado: ");
+        String estadoStr = sc.nextLine();
+
+        try {
+
+            EstadoPedido nuevoEstado = EstadoPedido.valueOf(estadoStr.toUpperCase());
+
+            // Valida si la transición de estado es válida antes de cambiarlo
+            pedido.validarTransicionEstado(nuevoEstado);
+            pedido.cambiarEstado(nuevoEstado);
+
+            System.out.println("Estado actualizado.");
+
+        } catch (Exception e) {
+            System.out.println("Estado invalido.");
         }
     }
 
-    return null;}
-    
-    private void eliminarPlato(Pedido pedido) {
-
-    Plato plato = buscarPlato();
-
-    if (plato == null) {
-        System.out.println("Plato no encontrado.");
-        return;
-    }
-
-    pedido.eliminarPlato(plato);
-
-    System.out.println("Plato eliminado del pedido.");}
-    
-    private void cambiarEstado(Pedido pedido) {
-
-    System.out.println("Estados disponibles:");
-
-    for (EstadoPedido e : EstadoPedido.values()) {
-        System.out.println("- " + e);
-    }
-
-    System.out.print("Nuevo estado: ");
-    String estadoStr = sc.nextLine();
-
-    try {
-        EstadoPedido nuevoEstado = EstadoPedido.valueOf(estadoStr.toUpperCase());
-
-        pedido.validarTransicionEstado(nuevoEstado);
-        pedido.cambiarEstado(nuevoEstado);
-
-        System.out.println("Estado actualizado.");
-    } catch (Exception e) {
-        System.out.println("Estado invalido.");}
-    }
-    
-    // ---------------- OPCIÓN 1 ----------------
+    // ---------------- OPCIÓN 1: REGISTRAR PEDIDO ----------------
     private void registrarPedido() {
 
         Mesa mesa = buscarMesa();
@@ -201,11 +222,13 @@ public class MenuGestionDePedidos {
             return;
         }
 
+        // Solo se pueden crear pedidos en mesas ocupadas
         if (mesa.getEstado() != EstadoMesa.OCUPADA) {
             System.out.println("La mesa no esta ocupada.");
             return;
         }
 
+        // Evita duplicar pedidos en la misma mesa
         Pedido existente = buscarPedidoPorMesa(mesa);
 
         if (existente != null) {
@@ -215,86 +238,85 @@ public class MenuGestionDePedidos {
 
         Pedido pedido = new Pedido();
 
-        pedido.setNumeroPedido("P"+String.valueOf(contadorPedidos++));
+        // Genera número de pedido único
+        pedido.setNumeroPedido("P" + String.valueOf(contadorPedidos++));
 
         pedido.setMesa(mesa);
-        
+
+        // Asocia cliente actualmente sentado en la mesa
         pedido.setCliente(mesa.getClienteActual());
 
         pedidos.add(pedido);
-        
+
         System.out.println("Pedido creado: " + pedido.getNumeroPedido());
     }
 
-    // ---------------- OPCIÓN 2 ----------------
+    // ---------------- OPCIÓN 2: EDITAR PEDIDO ----------------
     private void editarPedido() {
 
-    try {
-        
-        Mesa mesa = buscarMesa();
+        try {
 
-        if (mesa == null) {
-            System.out.println("Mesa no encontrada.");
-            return;
-        }
+            Mesa mesa = buscarMesa();
 
-        Pedido pedido = buscarPedidoPorMesa(mesa);
-
-        if (pedido == null) {
-            System.out.println("No hay pedido para esa mesa.");
-            return;
-        }
-
-        if (pedido == null) {
-            System.out.println("No hay pedido para esa mesa.");
-            return;
-        }
-
-        int op;
-
-        do {
-
-            System.out.println("\n===== EDITAR PEDIDO =====");
-            System.out.println("1. Agregar plato");
-            System.out.println("2. Eliminar plato");
-            System.out.println("3. Cambiar estado");
-            System.out.println("4. Ver pedido");
-            System.out.println("5. Salir");
-            System.out.print("Seleccione: ");
-
-            op = leerEntero();
-
-            switch (op) {
-
-                case 1:
-                    agregarPlato(pedido);
-                    break;
-
-                case 2:
-                    eliminarPlato(pedido);
-                    break;
-
-                case 3:
-                    cambiarEstado(pedido);
-                    break;
-
-                case 4:
-                    System.out.println(pedido);
-                    break;
-
+            if (mesa == null) {
+                System.out.println("Mesa no encontrada.");
+                return;
             }
 
-        } while (op != 5);
+            Pedido pedido = buscarPedidoPorMesa(mesa);
 
-    } catch (Exception e) {
-        System.out.println(e.getMessage());}
+            if (pedido == null) {
+                System.out.println("No hay pedido para esa mesa.");
+                return;
+            }
+
+            int op;
+
+            do {
+
+                // Submenú de edición del pedido
+                System.out.println("\n===== EDITAR PEDIDO =====");
+                System.out.println("1. Agregar plato");
+                System.out.println("2. Eliminar plato");
+                System.out.println("3. Cambiar estado");
+                System.out.println("4. Ver pedido");
+                System.out.println("5. Salir");
+                System.out.print("Seleccione: ");
+
+                op = leerEntero();
+
+                switch (op) {
+
+                    case 1:
+                        agregarPlato(pedido);
+                        break;
+
+                    case 2:
+                        eliminarPlato(pedido);
+                        break;
+
+                    case 3:
+                        cambiarEstado(pedido);
+                        break;
+
+                    case 4:
+                        System.out.println(pedido);
+                        break;
+                }
+
+            } while (op != 5);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    // ---------------- OPCIÓN 3 ----------------
+    // ---------------- OPCIÓN 3: MOSTRAR PEDIDOS ACTIVOS ----------------
     private void mostrarPedidosActivos() {
 
         boolean hayPedidos = false;
 
+        // Recorre todos los pedidos y filtra los activos
         for (Pedido pedido : pedidos) {
 
             if (pedido.getEstado() == EstadoPedido.PENDIENTE ||
@@ -317,8 +339,8 @@ public class MenuGestionDePedidos {
             System.out.println("No hay pedidos activos.");
         }
     }
-    
-    // ---------------- OPCIÓN 4 ----------------
+
+    // ---------------- OPCIÓN 4: BUSCAR PEDIDOS POR MESA ----------------
     private void mostrarPedidosPorMesa() {
 
         Mesa mesa = buscarMesa();

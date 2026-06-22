@@ -1,76 +1,96 @@
 package GestionDeFacturasYPagos;
+
 import java.util.Objects;
 
 public class Pago {
-    //Atributos
+
+    // Atributo: dinero pagado en efectivo
     private double efectivo;
+
+    // Atributo: dinero pagado con tarjeta
     private double tarjeta;
+
+    // Atributo: dinero pagado por transferencia bancaria
     private double transferencia;
+
+    // Atributo: total acumulado de todos los métodos de pago
     private double totalPagado;
 
-    //Constructor
+    // Constructor vacío
     public Pago() {
     }
 
-    //Get de efectivo
+    // Obtiene el monto pagado en efectivo
     public double getEfectivo() {
         return efectivo;
     }
-    
-    //Get de tarjeta
+
+    // Obtiene el monto pagado con tarjeta
     public double getTarjeta() {
         return tarjeta;
     }
-    
-    //Get de transferencia
+
+    // Obtiene el monto pagado por transferencia
     public double getTransferencia() {
         return transferencia;
     }
 
-    //Get de totalPagado 
+    // Obtiene el total acumulado de todos los pagos
     public double getTotalPagado() {
         return totalPagado;
     }
 
-    //Método para registrar el pago con efectivo
+    // Registra un pago en efectivo
     public void registrarPagoEfectivo(double monto) {
+
+        // Validación para evitar montos negativos
         if (monto < 0) {
             throw new IllegalArgumentException("Monto invalido.");
         }
+
+        // Suma el monto al efectivo
         this.efectivo += monto;
+
+        // Actualiza el total pagado
         calcularTotalPagado();
     }
-    
-    //Método para registrar el pago con tarjeta
+
+    // Registra un pago con tarjeta
     public void registrarPagoTarjeta(double monto) {
+
         if (monto < 0) {
             throw new IllegalArgumentException("Monto invalido.");
         }
+
         this.tarjeta += monto;
+
         calcularTotalPagado();
     }
 
-    //Método para registrar el pago con transferencia
+    // Registra un pago por transferencia
     public void registrarPagoTransferencia(double monto) {
+
         if (monto < 0) {
             throw new IllegalArgumentException("Monto invalido.");
         }
+
         this.transferencia += monto;
+
         calcularTotalPagado();
     }
 
-    //Método para calcular el total pagado
+    // Calcula el total general pagado sumando todos los métodos
     public double calcularTotalPagado() {
         this.totalPagado = efectivo + tarjeta + transferencia;
         return totalPagado;
     }
 
-    //Método para verificar si el pago está completo
+    // Verifica si el pago cubre o supera el total de la factura
     public boolean esPagoCompleto(double totalFactura) {
         return totalPagado >= totalFactura;
     }
 
-    //Overrides
+    // Representación en texto del objeto Pago
     @Override
     public String toString() {
         return "Efectivo: " + efectivo +
@@ -79,11 +99,13 @@ public class Pago {
                 ", Total Pagado: " + totalPagado;
     }
 
+    // Hash basado en los métodos de pago
     @Override
     public int hashCode() {
         return Objects.hash(efectivo, tarjeta, transferencia);
     }
 
+    // Dos pagos son iguales si coinciden los montos de cada método
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

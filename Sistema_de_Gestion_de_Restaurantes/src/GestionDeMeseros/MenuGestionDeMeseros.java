@@ -6,12 +6,17 @@ import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMesasYReservas.Mesa;
 
 public class MenuGestionDeMeseros {
-    //Atributos
+
+    // Lista de meseros registrados en el sistema
     private ArrayList<Mesero> meseros;
+
+    // Lista de mesas del restaurante
     private ArrayList<Mesa> mesas;
+
+    // Scanner para entrada de datos por consola
     private Scanner sc;
 
-    //Constructor
+    // Constructor: recibe listas de meseros y mesas existentes
     public MenuGestionDeMeseros(ArrayList<Mesero> meseros,
                                 ArrayList<Mesa> mesas) {
         this.meseros = meseros;
@@ -19,13 +24,14 @@ public class MenuGestionDeMeseros {
         this.sc = new Scanner(System.in);
     }
 
-    //Inicio de Menu
+    // Inicia el menú principal de gestión de meseros
     public void iniciarMenu() {
 
         int opcion;
 
         do {
-    
+
+            // Menú de opciones
             System.out.println("\n===== GESTION DE MESEROS =====");
             System.out.println("1. Registrar mesero");
             System.out.println("2. Listar meseros");
@@ -34,8 +40,10 @@ public class MenuGestionDeMeseros {
             System.out.println("5. Mostrar carga del mesero");
             System.out.println("6. Volver al menu principal");
             System.out.print("Seleccione una opcion: ");
+
             opcion = Integer.parseInt(sc.nextLine());
 
+            // Ejecución según opción seleccionada
             switch (opcion) {
 
                 case 1:
@@ -64,60 +72,61 @@ public class MenuGestionDeMeseros {
 
                 default:
                     System.out.println("Opción invalida.");
-
             }
         } while (opcion != 6);
     }
 
-    //Métodos
+    // Verifica si ya existe un mesero con la misma cédula
     private boolean meseroExiste(String cedula) {
 
-    for (Mesero m : meseros) {
-
-        if (m.getCedula().equals(cedula)) return true;
-    }
-
-    return false;
-    }
-    
-    private Mesa buscarMesaPorNumero(int numero) {
-
-    for (Mesa mesa : mesas) {
-
-        if (mesa.getNumero() == numero) {
-            return mesa;
+        for (Mesero m : meseros) {
+            if (m.getCedula().equals(cedula)) return true;
         }
 
+        return false;
     }
 
-    return null;
+    // Busca una mesa por su número
+    private Mesa buscarMesaPorNumero(int numero) {
+
+        for (Mesa mesa : mesas) {
+            if (mesa.getNumero() == numero) {
+                return mesa;
+            }
+        }
+
+        return null;
     }
 
-    // ---------------- OPCIÓN 1 ----------------
+    // ---------------- OPCIÓN 1: REGISTRAR MESERO ----------------
     private void registrarMesero() {
-        
+
         Mesero mesero = new Mesero();
 
         try {
+            // Captura de datos del mesero
             System.out.print("Cedula: ");
             mesero.setcedula(sc.nextLine().trim());
 
             System.out.print("Nombre: ");
             mesero.setNombre(sc.nextLine().trim());
-            
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error de datos:"+e.getMessage());
-            return;}
 
-        if (meseroExiste(mesero.getCedula())){
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error de datos:" + e.getMessage());
+            return;
+        }
+
+        // Validación de duplicados
+        if (meseroExiste(mesero.getCedula())) {
             System.out.println("Error: Ya existe un mesero registrado con ese numero de cedula");
-            return;}
-        
+            return;
+        }
+
         meseros.add(mesero);
         System.out.println("Mesero registrado correctamente");
     }
 
-    // ---------------- OPCIÓN 2 ----------------
+    // ---------------- OPCIÓN 2: LISTAR MESEROS ----------------
     private void listarMeseros() {
 
         if (meseros.isEmpty()) {
@@ -125,6 +134,7 @@ public class MenuGestionDeMeseros {
             return;
         }
 
+        // Muestra información resumida de cada mesero
         for (Mesero mesero : meseros) {
 
             System.out.println(
@@ -133,28 +143,23 @@ public class MenuGestionDeMeseros {
             " | Mesas actuales: " + mesero.getCantidadMesasAsignadas() +
             " | Total mesas atendidas: " + mesero.getHistorialMesas().size() +
             " | Total personas atendidas: " + mesero.getPersonasAtendidas());
-
         }
     }
 
-    // ---------------- OPCIÓN 3 ----------------
+    // Busca un mesero por cédula
     private Mesero buscarMeseroPorcedula(String cedula) {
 
         for (Mesero mesero : meseros) {
 
             if (mesero.getCedula().equalsIgnoreCase(cedula)) {
-
                 return mesero;
-
             }
-
         }
 
         return null;
-
     }
 
-    // ---------------- OPCIÓN 4 ----------------
+    // ---------------- OPCIÓN 3: ASIGNAR MESA A MESERO ----------------
     private void asignarMesaAMesero() {
 
         try {
@@ -172,6 +177,7 @@ public class MenuGestionDeMeseros {
             System.out.print("Numero de mesa: ");
             int numeroMesa = Integer.parseInt(sc.nextLine());
 
+            // Verifica que la mesa no esté asignada a otro mesero
             for (Mesero m : meseros) {
                 for (Mesa mesaAsignada : m.getMesasAsignadas()) {
                     if (mesaAsignada.getNumero() == numeroMesa) {
@@ -180,14 +186,14 @@ public class MenuGestionDeMeseros {
                     }
                 }
             }
-            
+
             Mesa mesa = buscarMesaPorNumero(numeroMesa);
 
             if (mesa == null) {
                 System.out.println("Mesa no encontrada.");
                 return;
             }
-            
+
             int personas = mesa.getPersonasOcupando();
 
             if (personas <= 0) {
@@ -195,9 +201,13 @@ public class MenuGestionDeMeseros {
                 return;
             }
 
+            // Asignación de mesa al mesero
             mesero.asignarMesa(mesa);
+
             mesa.setEstado(EstadoMesa.OCUPADA);
+
             mesero.getHistorialMesas().add(mesa);
+
             mesero.incrementarPersonasAtendidas(personas);
 
             System.out.println("Mesa asignada correctamente.");
@@ -207,7 +217,7 @@ public class MenuGestionDeMeseros {
         }
     }
 
-    // ---------------- OPCIÓN 5 ----------------
+    // ---------------- OPCIÓN 4: RETIRAR MESA ----------------
     private void retirarMesaDeMesero() {
 
         try {
@@ -246,7 +256,7 @@ public class MenuGestionDeMeseros {
         }
     }
 
-    // ---------------- OPCIÓN 6 ----------------
+    // ---------------- OPCIÓN 5: MOSTRAR CARGA DEL MESERO ----------------
     private void mostrarCargaMesero() {
 
         System.out.print("cedula del mesero: ");
@@ -255,30 +265,26 @@ public class MenuGestionDeMeseros {
         Mesero mesero = buscarMeseroPorcedula(cedula);
 
         if (mesero == null) {
-
             System.out.println("Mesero no encontrado.");
             return;
-
         }
 
+        // Información general del mesero
         System.out.println("\n========== INFORMACIÓN DEL MESERO ==========");
         System.out.println("cedula: " + mesero.getCedula());
         System.out.println("Nombre: " + mesero.getNombre());
         System.out.println("Mesas asignadas: " + mesero.getCantidadMesasAsignadas());
         System.out.println("Personas atendidas: " + mesero.getPersonasAtendidas());
 
+        // Detalle de mesas asignadas
         if (mesero.getMesasAsignadas().isEmpty()) {
-
             System.out.println("No tiene mesas asignadas.");
-
         } else {
 
             System.out.println("\nMesas asignadas:");
 
             for (Mesa mesa : mesero.getMesasAsignadas()) {
-
                 System.out.println(mesa);
-
             }
         }
     }
