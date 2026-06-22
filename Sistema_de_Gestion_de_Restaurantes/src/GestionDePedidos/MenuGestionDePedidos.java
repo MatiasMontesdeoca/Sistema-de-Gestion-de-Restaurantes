@@ -1,5 +1,5 @@
 package GestionDePedidos;
-import GestionDePedidos.EstadoPedido;
+
 import GestionDelMenu.Plato;
 import GestionDeMesasYReservas.Mesa;
 import GestionDeMesasYReservas.EstadoMesa;
@@ -7,15 +7,18 @@ import GestionDeMeseros.Mesero;
 import GestionDeClientes.Cliente;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 public class MenuGestionDePedidos {
+    //Atributos
     private ArrayList<Pedido> pedidos;
     private ArrayList<Cliente> clientes;
     private ArrayList<Mesero> meseros;
     private ArrayList<Mesa> mesas;
     private ArrayList<Plato> platos;
-    private Scanner teclado;
+    private Scanner sc;
     private int contadorPedidos = 1;
 
+    //Constructor
     public MenuGestionDePedidos(ArrayList<Pedido> pedidos,
                                 ArrayList<Cliente> clientes,
                                 ArrayList<Mesero> meseros,
@@ -27,18 +30,17 @@ public class MenuGestionDePedidos {
         this.meseros = meseros;
         this.mesas = mesas;
         this.platos = platos;
-        teclado = new Scanner(System.in);
+        this.sc = new Scanner(System.in);
     }
 
+    //Inicio de Menu
     public void iniciarMenu() {
 
         int opcion;
 
         do {
-
-            System.out.println("\n==============================");
-            System.out.println(" GESTION DE PEDIDOS");
-            System.out.println("==============================");
+            //Interfaz del Menu
+            System.out.println("\n===== GESTION DE PEDIDOS =====");
             System.out.println("1. Registrar pedido");
             System.out.println("2. Editar pedido");
             System.out.println("3. Mostrar pedidos activos");
@@ -46,7 +48,7 @@ public class MenuGestionDePedidos {
             System.out.println("5. Volver al menu principal");
             System.out.print("Seleccione una opcion: ");
 
-            opcion = Integer.parseInt(teclado.nextLine());
+            opcion = leerEntero();
 
             switch (opcion) {
 
@@ -67,7 +69,7 @@ public class MenuGestionDePedidos {
                     break;
 
                 case 5:
-                    System.out.println("Regresando...");
+                    System.out.println("Regresando al menu principal...");
                     break;
 
                 default:
@@ -77,6 +79,24 @@ public class MenuGestionDePedidos {
         } while (opcion != 5);
 
     }
+    
+    private int leerEntero() {
+
+        while (true) {
+
+            try {
+
+                return Integer.parseInt(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+
+                System.out.print("Ingrese un numero valido: ");
+
+            }
+
+        }
+
+    }    
     
     private Pedido buscarPedidoPorMesa(Mesa mesa) {
 
@@ -91,7 +111,7 @@ public class MenuGestionDePedidos {
     private Mesa buscarMesa() {
 
         System.out.print("Numero de mesa: ");
-        int numero = Integer.parseInt(teclado.nextLine());
+        int numero = Integer.parseInt(sc.nextLine());
 
         for (Mesa mesa : mesas) {
             if (mesa.getNumero() == numero) {
@@ -117,7 +137,7 @@ public class MenuGestionDePedidos {
         }
 
         System.out.print("Cantidad: ");
-        int cantidad = Integer.parseInt(teclado.nextLine());
+        int cantidad = Integer.parseInt(sc.nextLine());
 
         pedido.agregarPlato(plato, cantidad);
     }
@@ -125,7 +145,7 @@ public class MenuGestionDePedidos {
     private Plato buscarPlato() {
 
     System.out.print("Nombre del plato: ");
-    String nombre = teclado.nextLine();
+    String nombre = sc.nextLine();
 
     for (Plato plato : platos) {
 
@@ -158,7 +178,7 @@ public class MenuGestionDePedidos {
     }
 
     System.out.print("Nuevo estado: ");
-    String estadoStr = teclado.nextLine();
+    String estadoStr = sc.nextLine();
 
     try {
         EstadoPedido nuevoEstado = EstadoPedido.valueOf(estadoStr.toUpperCase());
@@ -171,6 +191,7 @@ public class MenuGestionDePedidos {
         System.out.println("Estado invalido.");}
     }
     
+    // ---------------- OPCIÓN 1 ----------------
     private void registrarPedido() {
 
         Mesa mesa = buscarMesa();
@@ -205,6 +226,7 @@ public class MenuGestionDePedidos {
         System.out.println("Pedido creado: " + pedido.getNumeroPedido());
     }
 
+    // ---------------- OPCIÓN 2 ----------------
     private void editarPedido() {
 
     try {
@@ -240,7 +262,7 @@ public class MenuGestionDePedidos {
             System.out.println("5. Salir");
             System.out.print("Seleccione: ");
 
-            op = Integer.parseInt(teclado.nextLine());
+            op = leerEntero();
 
             switch (op) {
 
@@ -268,6 +290,7 @@ public class MenuGestionDePedidos {
         System.out.println(e.getMessage());}
     }
 
+    // ---------------- OPCIÓN 3 ----------------
     private void mostrarPedidosActivos() {
 
         boolean hayPedidos = false;
@@ -276,7 +299,7 @@ public class MenuGestionDePedidos {
 
             if (pedido.getEstado() == EstadoPedido.PENDIENTE ||
                 pedido.getEstado() == EstadoPedido.PREPARANDO ||
-                pedido.getEstado() == EstadoPedido.PREPARADO ||
+                pedido.getEstado() == EstadoPedido.LISTO ||
                 pedido.getEstado() == EstadoPedido.SERVIDO) {
 
                 hayPedidos = true;
@@ -295,6 +318,7 @@ public class MenuGestionDePedidos {
         }
     }
     
+    // ---------------- OPCIÓN 4 ----------------
     private void mostrarPedidosPorMesa() {
 
         Mesa mesa = buscarMesa();

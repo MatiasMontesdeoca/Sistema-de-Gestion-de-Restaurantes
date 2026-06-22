@@ -1,4 +1,5 @@
 package GestionDeReportes;
+
 import GestionDeFacturasYPagos.Factura;
 import GestionDeMesasYReservas.Mesa;
 import java.time.LocalDateTime;
@@ -6,18 +7,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
 public class ReporteConsumoPorMesa {
-
-    private LocalDateTime fechaGeneracion;
-
+    //Atributos
+    private LocalDateTime fecha;
+    
+    //Constructor
     public ReporteConsumoPorMesa() {
-        this.fechaGeneracion = LocalDateTime.now();
+        this.fecha = LocalDateTime.now();
     }
 
-    public LocalDateTime getFechaGeneracion() {
-        return fechaGeneracion;
+    //Get de la fecha
+    public LocalDateTime getFecha() {
+        return fecha;
     }
 
+    //Métodos
     public HashMap<Mesa, Double> calcularConsumoPorMesa(ArrayList<Factura> facturas) {
         if (facturas == null) {
             throw new IllegalArgumentException("Lista invalida.");
@@ -70,7 +75,7 @@ public class ReporteConsumoPorMesa {
     DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     sb.append("Fecha: ")
-      .append(fechaGeneracion.format(fmt));
+      .append(fecha.format(fmt));
 
     return sb.toString();}
 

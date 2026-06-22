@@ -1,26 +1,33 @@
 package GestionDeMeseros;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import GestionDeMesasYReservas.Mesa;
 import GestionDeClientes.Persona;
+
 public class Mesero extends Persona{
+    //Atributos
     private ArrayList<Mesa> historialMesas = new ArrayList<>();
     private ArrayList<Mesa> mesasAsignadas;
     private int personasAtendidas;
 
+    //Constructor
     public Mesero() {
         this.mesasAsignadas = new ArrayList<>();
         this.personasAtendidas = 0;
     }
     
+    //Get de historialMesas 
     public ArrayList<Mesa> getHistorialMesas(){
         return historialMesas;
     }
 
+    //Get de mesasAsignadas
     public ArrayList<Mesa> getMesasAsignadas() {
         return mesasAsignadas;
     }
 
+    //Métodos
     public void asignarMesa(Mesa mesa) {
         if (mesa == null) {
             throw new IllegalArgumentException("La mesa no puede ser nula.");

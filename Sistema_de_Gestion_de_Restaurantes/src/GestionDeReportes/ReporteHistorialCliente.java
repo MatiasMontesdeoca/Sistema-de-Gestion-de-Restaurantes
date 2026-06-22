@@ -8,17 +8,20 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ReporteHistorialCliente {
+    //Atributos
+    private LocalDateTime fecha;
 
-    private LocalDateTime fechaGeneracion;
-
+    //Constructor
     public ReporteHistorialCliente() {
-        this.fechaGeneracion = LocalDateTime.now();
+        this.fecha = LocalDateTime.now();
+    }
+    
+    //Get de la fecha
+    public LocalDateTime getFecha() {
+        return fecha;
     }
 
-    public LocalDateTime getFechaGeneracion() {
-        return fechaGeneracion;
-    }
-
+    //Métodos
     // HISTORIAL INDIVIDUAL (por si lo usas en otra parte)
     public ArrayList<Pedido> obtenerHistorialCliente(ArrayList<Pedido> pedidos, Cliente cliente) {
 
@@ -68,11 +71,10 @@ public class ReporteHistorialCliente {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("\n=== REPORTE GENERAL DE CLIENTES ===\n");
         sb.append("Clientes que comieron: ").append(clientesAtendidos).append("\n");
         sb.append("Consumo total: ").append(consumoTotal).append("\n");
         sb.append("Consumo promedio: ").append(promedio).append("\n");
-        sb.append("Fecha: ").append(fechaGeneracion.toLocalDate()).append("\n");
+        sb.append("Fecha: ").append(fecha.toLocalDate()).append("\n");
 
         return sb.toString();
     }

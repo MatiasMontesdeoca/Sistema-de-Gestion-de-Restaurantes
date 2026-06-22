@@ -1,14 +1,18 @@
 package GestionDePedidos;
+
 import GestionDelMenu.Plato;
 import java.util.Objects;
+
 public class DetallePedido {
-    
+    //Atributos
     private Plato plato;
     private int cantidad;
 
+    //Constructor
     public DetallePedido() {
     }
 
+    //Get y Set de platos a añadir al pedido
     public Plato getPlato() {
         return plato;
     }
@@ -20,6 +24,7 @@ public class DetallePedido {
         this.plato = plato;
     }
 
+    //Get y Set de cantidad de platos a añadir al pedido
     public int getCantidad() {
         return cantidad;
     }
@@ -31,6 +36,7 @@ public class DetallePedido {
         this.cantidad = cantidad;
     }
 
+    //Métodos
     public void incrementarCantidad(int cantidad) {
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad a incrementar debe ser mayor a cero.");
@@ -42,6 +48,7 @@ public class DetallePedido {
         return plato != null ? plato.getPrecio() * cantidad : 0;
     }
 
+    //Overrides
     @Override
     public String toString() {
         return "Plato: " + (plato != null ? plato.getNombre() : "null") +

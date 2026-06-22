@@ -8,29 +8,26 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MenuReportes {
-
-    private Scanner teclado;
-
+    //Atributos
+    private Scanner sc;
     private ArrayList<Factura> facturas;
     private ArrayList<Pedido> pedidos;
     private ArrayList<DetallePedido> detalles;
-
     private ReporteVentas reporteVentas;
     private ReportePlatosMasVendidos reportePlatos;
     private ReporteMesasMasUtilizadas reporteMesas;
     private ReporteConsumoPorMesa reporteConsumo;
     private ReporteHistorialCliente reporteHistorial;
 
+    //Constructor
     public MenuReportes(ArrayList<Factura> facturas,
                         ArrayList<Pedido> pedidos,
                         ArrayList<DetallePedido> detalles) {
 
-        this.teclado = new Scanner(System.in);
-
+        this.sc = new Scanner(System.in);
         this.facturas = facturas;
         this.pedidos = pedidos;
         this.detalles = detalles;
-
         reporteVentas = new ReporteVentas();
         reportePlatos = new ReportePlatosMasVendidos();
         reporteMesas = new ReporteMesasMasUtilizadas();
@@ -38,6 +35,7 @@ public class MenuReportes {
         reporteHistorial = new ReporteHistorialCliente();
     }
 
+    //Inicio de Menu
     public void iniciarMenu() {
 
         int opcion;
@@ -53,7 +51,7 @@ public class MenuReportes {
             System.out.println("6. Volver al menu principal");
             System.out.print("Seleccione una opcion: ");
 
-            opcion = Integer.parseInt(teclado.nextLine());
+            opcion = leerEntero();
 
             switch (opcion) {
 
@@ -69,6 +67,26 @@ public class MenuReportes {
         } while (opcion != 6);
     }
 
+    //Métodos
+    private int leerEntero() {
+
+        while (true) {
+
+            try {
+
+                return Integer.parseInt(sc.nextLine());
+
+            } catch (NumberFormatException e) {
+
+                System.out.print("Ingrese un numero valido: ");
+
+            }
+
+        }
+
+    }
+    
+    // ---------------- OPCIÓN 1 ----------------
     private void generarReporteVentas() {
 
         try {
@@ -80,6 +98,7 @@ public class MenuReportes {
         }
     }
 
+    // ---------------- OPCIÓN 2 ----------------
     private void generarReportePlatosMasVendidos() {
 
         try {
@@ -90,7 +109,7 @@ public class MenuReportes {
             System.out.println("3. Postre");
             System.out.println("4. Bebida");
 
-            int op = Integer.parseInt(teclado.nextLine());
+            int op = Integer.parseInt(sc.nextLine());
 
             CategoriaPlato categoria = switch (op) {
                 case 1 -> CategoriaPlato.ENTRADA;
@@ -106,7 +125,7 @@ public class MenuReportes {
             }
 
             System.out.print("Top cuantos desea ver (max 10): ");
-            int top = Integer.parseInt(teclado.nextLine());
+            int top = Integer.parseInt(sc.nextLine());
 
             if (top > 10) top = 10;
             if (top <= 0) {
@@ -125,6 +144,7 @@ public class MenuReportes {
         }
     }
 
+    // ---------------- OPCIÓN 3 ----------------
     private void generarReporteMesasMasUtilizadas() {
 
         try {
@@ -147,6 +167,7 @@ public class MenuReportes {
         }
     }
     
+    // ---------------- OPCIÓN 4 ----------------
     private void generarReporteHistorialCliente() {
 
     try {
@@ -182,7 +203,6 @@ public class MenuReportes {
 
         double consumoPromedioPorPersona = totalConsumo / totalPersonas;
 
-        System.out.println("\n=== REPORTE HISTORIAL DE CONSUMO ===");
         System.out.println("Facturas analizadas: " + facturasValidas);
         System.out.println("Personas atendidas: " + totalPersonas);
         System.out.println("Consumo total (subtotal): " + totalConsumo);

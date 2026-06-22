@@ -1,27 +1,27 @@
 package GestionDelMenu;
-import GestionDelMenu.Entrada;
-import GestionDelMenu.Bebida;
+
 import java.util.ArrayList;
 import java.util.Scanner;
-public class MenuGestionDelMenu {
-    
-    private ArrayList<Plato> platos;
-    private Scanner teclado;
 
+public class MenuGestionDelMenu {
+    //Atributos
+    private ArrayList<Plato> platos;
+    private Scanner sc;
+
+    //Constructor
     public MenuGestionDelMenu(ArrayList<Plato> platos) {
         this.platos = platos;
-        teclado = new Scanner(System.in);
+        this.sc = new Scanner(System.in);
     }
 
+    //Inicio de Menu
     public void iniciarMenu() {
 
         int opcion;
 
         do {
-
-            System.out.println("\n====================================");
-            System.out.println("      GESTION DEL MENU");
-            System.out.println("====================================");
+            //Interfaz del Menu
+            System.out.println("\n===== GESTION DEL MENU =====");
             System.out.println("1. Registrar plato");
             System.out.println("2. Mostrar platos");
             System.out.println("3. Buscar plato");
@@ -62,8 +62,58 @@ public class MenuGestionDelMenu {
 
     }
     
-    
+    //Métodos
+    private Plato buscarPorNombre(String nombre) {
 
+    for (Plato plato : platos) {
+        if (plato.getNombre().equalsIgnoreCase(nombre)) {
+            return plato;
+        }
+    }
+
+    return null;}
+
+    private int leerEntero() {
+
+        while (true) {
+
+            try {
+
+                int numero = Integer.parseInt(sc.nextLine());
+
+                return numero;
+
+            } catch (NumberFormatException e) {
+
+                System.out.print("Ingrese un numero valido: ");
+
+            }
+
+        }
+
+    }
+
+    private double leerDouble() {
+
+        while (true) {
+
+            try {
+
+                double numero = Double.parseDouble(sc.nextLine());
+
+                return numero;
+
+            } catch (NumberFormatException e) {
+
+                System.out.print("Ingrese un numero valido: ");
+
+            }
+
+        }
+
+    }
+    
+    // ---------------- OPCIÓN 1 ----------------
     private void registrarPlato() {
 
         try {
@@ -99,7 +149,7 @@ public class MenuGestionDelMenu {
             }
 
             System.out.print("Nombre del plato: ");
-            String nombre = teclado.nextLine();
+            String nombre = sc.nextLine();
 
             if (buscarPorNombre(nombre) != null) {
                 System.out.println("Ya existe un plato con ese nombre.");
@@ -112,7 +162,7 @@ public class MenuGestionDelMenu {
             plato.setPrecio(leerDouble());
 
             System.out.print("Disponible (true/false): ");
-            plato.setDisponibilidad(Boolean.parseBoolean(teclado.nextLine()));
+            plato.setDisponibilidad(Boolean.parseBoolean(sc.nextLine()));
 
             platos.add(plato);
 
@@ -123,6 +173,7 @@ public class MenuGestionDelMenu {
         }
     }
 
+    // ---------------- OPCIÓN 2 ----------------
     private void mostrarPlatos() {
 
         if (platos.isEmpty()) {
@@ -141,21 +192,12 @@ public class MenuGestionDelMenu {
         }
 
     }
-    
-    private Plato buscarPorNombre(String nombre) {
 
-    for (Plato plato : platos) {
-        if (plato.getNombre().equalsIgnoreCase(nombre)) {
-            return plato;
-        }
-    }
-
-    return null;}
-
+    // ---------------- OPCIÓN 3 ----------------
     private void buscarPlato() {
 
     System.out.print("Nombre del plato: ");
-    String nombre = teclado.nextLine();
+    String nombre = sc.nextLine();
 
     Plato plato = buscarPorNombre(nombre);
 
@@ -164,13 +206,14 @@ public class MenuGestionDelMenu {
     } else {
         System.out.println(plato);}
     }
-        
+    
+    // ---------------- OPCIÓN 4 ----------------    
     private void modificarPlato() {
 
        try {
 
            System.out.print("Nombre del plato: ");
-           String nombre = teclado.nextLine();
+           String nombre = sc.nextLine();
 
            Plato plato = buscarPorNombre(nombre);
 
@@ -196,7 +239,7 @@ public class MenuGestionDelMenu {
 
                    case 1:
                        System.out.print("Nuevo nombre: ");
-                       String nuevoNombre = teclado.nextLine();
+                       String nuevoNombre = sc.nextLine();
 
                        if (buscarPorNombre(nuevoNombre) != null) {
                            System.out.println("Ya existe un plato con ese nombre.");
@@ -214,7 +257,7 @@ public class MenuGestionDelMenu {
 
                    case 3:
                        System.out.print("Nuevo estado (true/false): ");
-                       plato.setDisponibilidad(Boolean.parseBoolean(teclado.nextLine()));
+                       plato.setDisponibilidad(Boolean.parseBoolean(sc.nextLine()));
                        System.out.println("Disponibilidad actualizada.");
                        break;
 
@@ -238,45 +281,4 @@ public class MenuGestionDelMenu {
            System.out.println(e.getMessage());
        }
    }
-
-    private int leerEntero() {
-
-        while (true) {
-
-            try {
-
-                int numero = Integer.parseInt(teclado.nextLine());
-
-                return numero;
-
-            } catch (NumberFormatException e) {
-
-                System.out.print("Ingrese un numero valido: ");
-
-            }
-
-        }
-
-    }
-
-    private double leerDouble() {
-
-        while (true) {
-
-            try {
-
-                double numero = Double.parseDouble(teclado.nextLine());
-
-                return numero;
-
-            } catch (NumberFormatException e) {
-
-                System.out.print("Ingrese un numero valido: ");
-
-            }
-
-        }
-
-    }
-
 }

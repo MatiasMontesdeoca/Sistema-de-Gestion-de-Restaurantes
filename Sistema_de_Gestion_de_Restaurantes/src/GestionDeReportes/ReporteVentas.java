@@ -1,19 +1,24 @@
 package GestionDeReportes;
+
 import GestionDeFacturasYPagos.Factura;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
 public class ReporteVentas {
-    
-    private LocalDateTime fechaGeneracion;
+    //Atributos
+    private LocalDateTime fecha;
 
+    //Constructor
     public ReporteVentas() {
-        this.fechaGeneracion = LocalDateTime.now();
+        this.fecha = LocalDateTime.now();
     }
 
+    //Get de fecha
     public LocalDateTime getFechaGeneracion() {
-        return fechaGeneracion;
+        return fecha;
     }
 
+    //Métodos
     public double calcularTotalVentas(ArrayList<Factura> facturas) {
         if (facturas == null) {
             throw new IllegalArgumentException("La lista de facturas no puede ser nula.");
@@ -45,6 +50,6 @@ public class ReporteVentas {
     public String generarResumenVentas(ArrayList<Factura> facturas) {
         return "Total ventas: " + calcularTotalVentas(facturas) +
                ", Cantidad ventas: " + contarVentas(facturas) +
-               ", Fecha: " + fechaGeneracion;
+               ", Fecha: " + fecha;
     }
 }

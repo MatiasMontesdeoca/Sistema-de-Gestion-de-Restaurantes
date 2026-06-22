@@ -1,4 +1,5 @@
 package GestionDeReportes;
+
 import GestionDePedidos.Pedido;
 import GestionDeMesasYReservas.Mesa;
 import java.time.LocalDateTime;
@@ -6,18 +7,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
 public class ReporteMesasMasUtilizadas {
-    
-    private LocalDateTime fechaGeneracion;
+    //Atributos
+    private LocalDateTime fecha;
 
+    //Constructor
     public ReporteMesasMasUtilizadas() {
-        this.fechaGeneracion = LocalDateTime.now();
+        this.fecha = LocalDateTime.now();
     }
 
+    //Get de la fecha
     public LocalDateTime getFechaGeneracion() {
-        return fechaGeneracion;
+        return fecha;
     }
 
+    //Métodos
     public HashMap<Mesa, Integer> calcularUsoMesas(ArrayList<Pedido> pedidos) {
         if (pedidos == null) {
             throw new IllegalArgumentException("Lista invalida.");
@@ -69,7 +74,7 @@ public String generarReporte(ArrayList<Pedido> pedidos) {
     DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     sb.append("Fecha: ")
-      .append(fechaGeneracion.format(fmt));
+      .append(fecha.format(fmt));
 
     return sb.toString();}
 }

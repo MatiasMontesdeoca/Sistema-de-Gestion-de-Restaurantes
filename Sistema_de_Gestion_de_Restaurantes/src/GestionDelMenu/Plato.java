@@ -1,15 +1,18 @@
 package GestionDelMenu;
-import GestionDelMenu.CategoriaPlato;
+
 import java.util.Objects;
 
 public abstract class Plato {
+    //Atributos
     protected String nombre;
     protected double precio;
     protected boolean disponible;
 
+    //Constructos
     public Plato() {
     }
 
+    //Get y Set de nombre del plato
     public String getNombre() {
         return nombre;
     }
@@ -21,6 +24,7 @@ public abstract class Plato {
         this.nombre = nombre.trim();
     }
 
+    //Get y Set del precio de un plato
     public double getPrecio() {
         return precio;
     }
@@ -32,6 +36,7 @@ public abstract class Plato {
         this.precio = precio;
     }
 
+    //Get y Set la disponibilidad de un plato
     public boolean getDisponibilidad() {
         return disponible;
     }
@@ -40,9 +45,10 @@ public abstract class Plato {
         this.disponible = disponible;
     }
 
-    // 🔥 ESTO ES LO QUE TE FALTA
+    //Get de la categoria del plato
     public abstract CategoriaPlato getCategoria();
 
+    //Overrides
     @Override
     public String toString() {
         return  "Nombre: " + nombre +

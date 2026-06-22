@@ -1,90 +1,75 @@
 package GestionDeMeseros;
-import GestionDeMeseros.Mesero;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMesasYReservas.Mesa;
+
 public class MenuGestionDeMeseros {
+    //Atributos
     private ArrayList<Mesero> meseros;
     private ArrayList<Mesa> mesas;
-    private Scanner teclado;
+    private Scanner sc;
 
+    //Constructor
     public MenuGestionDeMeseros(ArrayList<Mesero> meseros,
                                 ArrayList<Mesa> mesas) {
         this.meseros = meseros;
         this.mesas = mesas;
-        teclado = new Scanner(System.in);
+        this.sc = new Scanner(System.in);
     }
 
+    //Inicio de Menu
     public void iniciarMenu() {
 
         int opcion;
 
         do {
+    
+            System.out.println("\n===== GESTION DE MESEROS =====");
+            System.out.println("1. Registrar mesero");
+            System.out.println("2. Listar meseros");
+            System.out.println("3. Asignar mesa");
+            System.out.println("4. Retirar mesa");
+            System.out.println("5. Mostrar carga del mesero");
+            System.out.println("6. Volver al menu principal");
+            System.out.print("Seleccione una opcion: ");
+            opcion = Integer.parseInt(sc.nextLine());
 
-            mostrarMenu();
+            switch (opcion) {
 
-            try {
+                case 1:
+                    registrarMesero();
+                    break;
 
-                System.out.print("Seleccione una opcion: ");
-                opcion = Integer.parseInt(teclado.nextLine());
+                case 2:
+                    listarMeseros();
+                    break;
 
-                switch (opcion) {
+                case 3:
+                    asignarMesaAMesero();
+                    break;
 
-                    case 1:
-                        registrarMesero();
-                        break;
+                case 4:
+                    retirarMesaDeMesero();
+                    break;
 
-                    case 2:
-                        listarMeseros();
-                        break;
+                case 5:
+                    mostrarCargaMesero();
+                    break;
 
-                    case 3:
-                        asignarMesaAMesero();
-                        break;
+                case 6:
+                    System.out.println("Regresando al menu principal...");
+                    break;
 
-                    case 4:
-                        retirarMesaDeMesero();
-                        break;
-
-                    case 5:
-                        mostrarCargaMesero();
-                        break;
-
-                    case 6:
-                        System.out.println("\nRegresando al menu principal...\n");
-                        break;
-
-                    default:
-                        System.out.println("Opción invalida.");
-
-                }
-
-            } catch (NumberFormatException e) {
-
-                System.out.println("Debe ingresar un numero.");
-
-                opcion = 0;
+                default:
+                    System.out.println("Opción invalida.");
 
             }
-
         } while (opcion != 6);
-
     }
 
-    private void mostrarMenu() {
-
-        System.out.println("\n===============================");
-        System.out.println("   GESTION DE MESEROS");
-        System.out.println("===============================");
-        System.out.println("1. Registrar mesero");
-        System.out.println("2. Listar meseros");
-        System.out.println("3. Asignar mesa");
-        System.out.println("4. Retirar mesa");
-        System.out.println("5. Mostrar carga del mesero");
-        System.out.println("6. Volver al menu principal");
-    }
-    
+    //Métodos
     private boolean meseroExiste(String cedula) {
 
     for (Mesero m : meseros) {
@@ -115,10 +100,10 @@ public class MenuGestionDeMeseros {
 
         try {
             System.out.print("Cedula: ");
-            mesero.setcedula(teclado.nextLine().trim());
+            mesero.setcedula(sc.nextLine().trim());
 
             System.out.print("Nombre: ");
-            mesero.setNombre(teclado.nextLine().trim());
+            mesero.setNombre(sc.nextLine().trim());
             
         } catch (IllegalArgumentException e) {
             System.out.println("Error de datos:"+e.getMessage());
@@ -175,7 +160,7 @@ public class MenuGestionDeMeseros {
         try {
 
             System.out.print("Cedula del mesero: ");
-            String cedula = teclado.nextLine();
+            String cedula = sc.nextLine();
 
             Mesero mesero = buscarMeseroPorcedula(cedula);
 
@@ -185,7 +170,7 @@ public class MenuGestionDeMeseros {
             }
 
             System.out.print("Numero de mesa: ");
-            int numeroMesa = Integer.parseInt(teclado.nextLine());
+            int numeroMesa = Integer.parseInt(sc.nextLine());
 
             for (Mesero m : meseros) {
                 for (Mesa mesaAsignada : m.getMesasAsignadas()) {
@@ -228,7 +213,7 @@ public class MenuGestionDeMeseros {
         try {
 
             System.out.print("cedula del mesero: ");
-            String cedula = teclado.nextLine();
+            String cedula = sc.nextLine();
 
             Mesero mesero = buscarMeseroPorcedula(cedula);
 
@@ -238,7 +223,7 @@ public class MenuGestionDeMeseros {
             }
 
             System.out.print("Numero de la mesa a retirar: ");
-            int numeroMesa = Integer.parseInt(teclado.nextLine());
+            int numeroMesa = Integer.parseInt(sc.nextLine());
 
             Mesa mesa = buscarMesaPorNumero(numeroMesa);
 
@@ -265,7 +250,7 @@ public class MenuGestionDeMeseros {
     private void mostrarCargaMesero() {
 
         System.out.print("cedula del mesero: ");
-        String cedula = teclado.nextLine();
+        String cedula = sc.nextLine();
 
         Mesero mesero = buscarMeseroPorcedula(cedula);
 
@@ -295,8 +280,6 @@ public class MenuGestionDeMeseros {
                 System.out.println(mesa);
 
             }
-
         }
-
     }
 }

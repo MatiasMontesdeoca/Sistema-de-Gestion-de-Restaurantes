@@ -8,17 +8,20 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class ReportePlatosMasVendidos {
+    //Atributos
+    private LocalDateTime fecha;
 
-    private LocalDateTime fechaGeneracion;
-
+    // Constructor
     public ReportePlatosMasVendidos() {
-        this.fechaGeneracion = LocalDateTime.now();
+        this.fecha = LocalDateTime.now();
     }
-
+    
+    //Get de fecha
     public LocalDateTime getFechaGeneracion() {
-        return fechaGeneracion;
+        return fecha;
     }
 
+    //Métodos
     // =========================
     // CALCULO GENERAL
     // =========================
@@ -85,7 +88,7 @@ public class ReportePlatosMasVendidos {
         HashMap<Plato, Integer> mapa = calcularPlatosVendidos(pedidos);
 
         return "Top platos: " + obtenerTopPlatos(mapa, top)
-                + "\nFecha: " + fechaGeneracion;
+                + "\nFecha: " + fecha;
     }
 
     // =========================

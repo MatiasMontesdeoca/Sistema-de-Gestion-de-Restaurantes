@@ -1,6 +1,5 @@
 package GestionDePedidos;
-import GestionDePedidos.EstadoPedido;
-import GestionDePedidos.DetallePedido;
+
 import GestionDelMenu.Plato;
 import GestionDeMesasYReservas.Mesa;
 import GestionDeMeseros.Mesero;
@@ -8,8 +7,9 @@ import GestionDeClientes.Cliente;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
+
 public class Pedido {
-    
+    //Atributos
     private String numeroPedido;
     private LocalDateTime fecha;
     private Cliente cliente;
@@ -18,12 +18,14 @@ public class Pedido {
     private EstadoPedido estado;
     private ArrayList<DetallePedido> detalles;
 
+    //Constructor
     public Pedido() {
         this.detalles = new ArrayList<>();
         this.estado = EstadoPedido.PENDIENTE;
         this.fecha = LocalDateTime.now();
     }
 
+    //Get y Set del numeroPedido de la mesa
     public String getNumeroPedido() {
         return numeroPedido;
     }
@@ -35,10 +37,12 @@ public class Pedido {
         this.numeroPedido = numeroPedido.trim();
     }
 
+    //Get de la fecha
     public LocalDateTime getFecha() {
         return fecha;
     }
 
+    //Get y Set del cliente al cual esta a nombre el pedido
     public Cliente getCliente() {
         return cliente;
     }
@@ -50,6 +54,7 @@ public class Pedido {
         this.cliente = cliente;
     }
 
+    //Get y Set del mesero que está tomando el pedido a la mesa
     public Mesero getMesero() {
         return mesero;
     }
@@ -61,6 +66,7 @@ public class Pedido {
         this.mesero = mesero;
     }
 
+    //Get y Set de la mesa donde esta asignado el pedido
     public Mesa getMesa() {
         return mesa;
     }
@@ -72,14 +78,17 @@ public class Pedido {
         this.mesa = mesa;
     }
 
+    //Get estado del pedido
     public EstadoPedido getEstado() {
         return estado;
     }
 
+    //Get detalles del pedido
     public ArrayList<DetallePedido> getDetalles() {
         return detalles;
     }
 
+    //Método
     public void agregarPlato(Plato plato, int cantidad) {
         if (!esModificable()) {
             throw new IllegalStateException("El pedido no puede modificarse.");
@@ -166,6 +175,7 @@ public class Pedido {
         }
     }
 
+    //Overrides
     @Override
     public String toString() {
         return "Pedido #" + numeroPedido +

@@ -1,9 +1,10 @@
 package GestionDePedidos;
 
 public enum EstadoPedido {
+    //Estados del pedido
     PENDIENTE,
     PREPARANDO,
-    PREPARADO,
+    LISTO,
     SERVIDO,
     PAGADO,
     CANCELADO
