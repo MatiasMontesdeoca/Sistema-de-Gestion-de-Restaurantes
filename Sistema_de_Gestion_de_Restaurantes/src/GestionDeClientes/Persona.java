@@ -1,14 +1,10 @@
-package GestionDeClientes;
+ package GestionDeClientes;
 
 public abstract class Persona {
 
     // Atributos comunes para cualquier persona del sistema
     protected String cedula;  // Identificación única (10 dígitos)
     protected String nombre;  // Nombre completo (nombre y apellido)
-
-    // Constructor vacío
-    public Persona() {
-    }
 
     // Obtiene la cédula de la persona
     public String getCedula() {
