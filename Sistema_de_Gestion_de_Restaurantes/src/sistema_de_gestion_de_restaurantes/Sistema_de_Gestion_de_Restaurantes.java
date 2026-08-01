@@ -1,6 +1,5 @@
 package sistema_de_gestion_de_restaurantes;
 
-import Persistencia.ArchivosDatos;
 import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import GestionDeReportes.MenuReportes;
 import GestionDeFacturasYPagos.MenuFacturacionYPagos;
@@ -25,7 +24,7 @@ public class Sistema_de_Gestion_de_Restaurantes {
 
         // Listas globales compartidas por todo el sistema
         // Aquí se almacenan todos los datos del restaurante en memoria
-        ArrayList<Cliente> clientes = ArchivosDatos.cargarClientes();
+        ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Mesero> meseros = new ArrayList<>();
         ArrayList<Mesa> mesas = new ArrayList<>();
         ArrayList<Plato> platos = new ArrayList<>();

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMesasYReservas.Mesa;
-import Persistencia.ArchivosDatos;
 
 public class MenuGestionDeClientes {
 
@@ -136,7 +135,6 @@ public class MenuGestionDeClientes {
 
         // Agrega cliente a la lista
         clientes.add(c);
-        ArchivosDatos.guardarClientes(clientes);
         System.out.println("Cliente registrado correctamente.");
     }
 
