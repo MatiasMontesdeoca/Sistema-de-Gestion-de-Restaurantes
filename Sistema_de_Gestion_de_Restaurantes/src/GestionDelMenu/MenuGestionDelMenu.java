@@ -1,8 +1,10 @@
 package GestionDelMenu;
 
+import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import ExcepcionesPersonalizadas.PlatoDuplicadoException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class MenuGestionDelMenu {
 
@@ -68,7 +70,7 @@ public class MenuGestionDelMenu {
             try {
                 return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido");
             }
 
         }
@@ -82,7 +84,7 @@ public class MenuGestionDelMenu {
             try {
                 return Double.parseDouble(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito decimal valido");
             }
 
         }
@@ -102,7 +104,7 @@ public class MenuGestionDelMenu {
                     return false;
                 }
             }   catch(NumberFormatException e){
-                System.out.println("Error: " + e.getMessage());
+                MensajesDeExcepciones.mostrarError("Debe ingresar un estado de disponibilidad valido (1-Disponible / 0-Agotado)");
             }
         }
     }
@@ -161,10 +163,12 @@ public class MenuGestionDelMenu {
             System.out.println("Plato registrado correctamente.");
 
         } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
             
         } catch (PlatoDuplicadoException e){
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Ya existe un plato registrado con ese nombre" + "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -267,7 +271,8 @@ public class MenuGestionDelMenu {
             } while (op != 5);
 
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         }
     }
 }

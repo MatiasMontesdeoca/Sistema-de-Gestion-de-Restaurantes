@@ -1,11 +1,13 @@
 package GestionDeReportes;
 
+import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import GestionDeFacturasYPagos.Factura;
 import GestionDePedidos.Pedido;
 import GestionDePedidos.DetallePedido;
 import GestionDelMenu.CategoriaPlato;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class MenuReportes {
 
@@ -83,7 +85,7 @@ public class MenuReportes {
             try {
                 return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido" );
             }
 
         }
@@ -97,8 +99,9 @@ public class MenuReportes {
             System.out.println();
             System.out.println(reporteVentas.generarResumenVentas(facturas));
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -114,7 +117,7 @@ public class MenuReportes {
             System.out.println("3. Postre");
             System.out.println("4. Bebida");
 
-            int op = Integer.parseInt(sc.nextLine());
+            int op = leerEntero();
 
             // Conversión de opción numérica a enum de categoría
             CategoriaPlato categoria = switch (op) {
@@ -131,7 +134,7 @@ public class MenuReportes {
             }
 
             System.out.print("Top cuantos desea ver (max 10): ");
-            int top = Integer.parseInt(sc.nextLine());
+            int top = leerEntero();
 
             // Limita el rango del top para evitar valores excesivos
             if (top > 10) top = 10;
@@ -148,7 +151,8 @@ public class MenuReportes {
             );
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -161,7 +165,8 @@ public class MenuReportes {
             System.out.println(reporteMesas.generarReporte(pedidos));
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -173,7 +178,8 @@ public class MenuReportes {
             System.out.println(reporteConsumo.generarReporte(facturas));
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -228,7 +234,8 @@ public class MenuReportes {
             System.out.println("Consumo promedio por persona: " + consumoPromedioPorPersona);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         }
     }
 }

@@ -1,12 +1,14 @@
 package GestionDeFacturasYPagos;
 
-import ExcepcionesPersonalizadas.MetodoDePagoInvalido;
+import ExcepcionesPersonalizadas.MensajesDeExcepciones;
+import ExcepcionesPersonalizadas.MetodoDePagoInvalidoException;
 import GestionDePedidos.Pedido;
 import GestionDePedidos.EstadoPedido;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeClientes.Cliente;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class MenuFacturacionYPagos {
 
@@ -68,7 +70,7 @@ public class MenuFacturacionYPagos {
             try {
                 return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido");
             }
         }
     }
@@ -81,7 +83,7 @@ public class MenuFacturacionYPagos {
             try {
                 return Double.parseDouble(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito decimal valido ");
             }
 
         }
@@ -154,42 +156,48 @@ public class MenuFacturacionYPagos {
         System.out.println("1. Efectivo");
         System.out.println("2. Tarjeta");
         System.out.println("3. Transferencia");
+       
+        try{
+            int op = leerEntero();
 
-        int op = leerEntero();
+            if (op < 1 || op > 3) {
+               throw new MetodoDePagoInvalidoException("Metodo de pago no aceptado, seleccione otro");
+            }
 
-        if (op < 1 || op > 3) {
-           throw new MetodoDePagoInvalido;
+            // Creación de la factura
+            Factura factura = new Factura();
+            factura.setPedido(pedido);
+            factura.setNumeroFactura("F" + (facturas.size() + 1));
+
+            // Cálculo interno de subtotal, descuento y total
+            factura.cerrarFactura(descuento);
+
+            // Obtener objeto pago asociado a la factura
+            Pago pago = factura.getPago();
+
+            // Registrar el pago según método seleccionado
+            switch (op) {
+                case 1 -> pago.registrarPagoEfectivo(factura.getTotal());
+                case 2 -> pago.registrarPagoTarjeta(factura.getTotal());
+                case 3 -> pago.registrarPagoTransferencia(factura.getTotal());
+            }
+
+            // Guardar factura en el sistema
+            facturas.add(factura);
+
+            // Cambiar estado del pedido a pagado
+            pedido.cambiarEstado(EstadoPedido.PAGADO);
+
+            // Liberar la mesa
+            pedido.getMesa().setEstado(EstadoMesa.LIBRE);
+
+            System.out.println("Pago realizado. Factura generada.");
+        } catch(MetodoDePagoInvalidoException e){
+            MensajesDeExcepciones.mostrarAdvertencia("El metodo de pago seleccionado no es valido, porfavor seleccione un metodo de pago valido" + "\n" + e.getMessage());
+            return;
         }
-
-        // Creación de la factura
-        Factura factura = new Factura();
-        factura.setPedido(pedido);
-        factura.setNumeroFactura("F" + (facturas.size() + 1));
-
-        // Cálculo interno de subtotal, descuento y total
-        factura.cerrarFactura(descuento);
-
-        // Obtener objeto pago asociado a la factura
-        Pago pago = factura.getPago();
-
-        // Registrar el pago según método seleccionado
-        switch (op) {
-            case 1 -> pago.registrarPagoEfectivo(factura.getTotal());
-            case 2 -> pago.registrarPagoTarjeta(factura.getTotal());
-            case 3 -> pago.registrarPagoTransferencia(factura.getTotal());
-        }
-
-        // Guardar factura en el sistema
-        facturas.add(factura);
-
-        // Cambiar estado del pedido a pagado
-        pedido.cambiarEstado(EstadoPedido.PAGADO);
-
-        // Liberar la mesa
-        pedido.getMesa().setEstado(EstadoMesa.LIBRE);
-
-        System.out.println("Pago realizado. Factura generada.");
     }
+        
 
     // ---------------- OPCIÓN 2: MOSTRAR FACTURAS ----------------
     private void mostrarFacturas() {

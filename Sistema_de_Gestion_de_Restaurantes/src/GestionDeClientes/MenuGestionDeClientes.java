@@ -1,6 +1,7 @@
 package GestionDeClientes;
 
 import ExcepcionesPersonalizadas.ClienteDuplicadoException;
+import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
@@ -74,7 +75,7 @@ public class MenuGestionDeClientes {
             try {
                 return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido");
             }
         }
     }
@@ -120,7 +121,7 @@ public class MenuGestionDeClientes {
 
         } catch (IllegalArgumentException e) {
             // Manejo de errores de validación en setters
-            System.out.println("Error de datos: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos " + "\n" + e.getMessage());
             return;
         }
 
@@ -128,7 +129,7 @@ public class MenuGestionDeClientes {
         try{
             if(clienteExiste(c.getCedula(), c.getTelefono(), c.getCorreoElectronico()));
         } catch(ClienteDuplicadoException e){
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Ya existe un cliente registrado" + "\n" + e.getMessage());
             return;
         }
 

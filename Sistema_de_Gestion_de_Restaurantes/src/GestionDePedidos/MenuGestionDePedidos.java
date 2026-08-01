@@ -1,5 +1,6 @@
 package GestionDePedidos;
 
+import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import GestionDelMenu.Plato;
 import GestionDeMesasYReservas.Mesa;
 import GestionDeMesasYReservas.EstadoMesa;
@@ -7,6 +8,7 @@ import GestionDeMeseros.Mesero;
 import GestionDeClientes.Cliente;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class MenuGestionDePedidos {
 
@@ -101,7 +103,7 @@ public class MenuGestionDePedidos {
             try {
                 return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido");
             }
         }
     }
@@ -207,8 +209,12 @@ public class MenuGestionDePedidos {
 
             System.out.println("Estado actualizado.");
 
-        } catch (Exception e) {
-            System.out.println("Estado invalido.");
+        } catch (IllegalArgumentException e) {
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
+        } catch (IllegalStateException e) {
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar un estado valido para el pedido (Pendiente-Preparando-Listo-Servido-Pagado-Cancelado" + "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -307,7 +313,8 @@ public class MenuGestionDePedidos {
             } while (op != 5);
 
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         }
     }
 

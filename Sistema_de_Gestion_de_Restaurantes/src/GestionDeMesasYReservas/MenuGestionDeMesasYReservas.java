@@ -1,5 +1,6 @@
 package GestionDeMesasYReservas;
 
+import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import ExcepcionesPersonalizadas.MesaDuplicadaException;
 import ExcepcionesPersonalizadas.MesaReservadaException;
 import GestionDeMeseros.Mesero;
@@ -7,6 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class MenuGestionDeMesasYReservas {
 
@@ -102,7 +104,7 @@ public class MenuGestionDeMesasYReservas {
             try {
                 return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido");
             }
         }
     }
@@ -114,7 +116,7 @@ public class MenuGestionDeMesasYReservas {
             try {
                 return LocalTime.parse(sc.nextLine());
             } catch (DateTimeParseException e) {
-                System.out.print("Formato incorrecto. Ingrese la hora (HH:mm): ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar la hora en el formato valido HH:MM (24H)");
             }
         }
     }
@@ -163,10 +165,12 @@ public class MenuGestionDeMesasYReservas {
             System.out.println("Mesa registrada correctamente.");
             
         } catch(MesaDuplicadaException e){
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Ya existe una mesa registrado con ese numero identificador" + "\n" + e.getMessage());
+            return;
 
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos"+ "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -264,9 +268,11 @@ public class MenuGestionDeMesasYReservas {
             }
 
         } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         } catch (IllegalStateException e){
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar un estado valido para la mesa (LIBRE-OCUPADA-RESERVADA)" + "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -305,10 +311,12 @@ public class MenuGestionDeMesasYReservas {
             System.out.println("Reserva registrada correctamente.");
 
         } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
+            return;
         
         } catch (MesaReservadaException e) {
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("La mesa ya se encuentra reservada" + "\n" + e.getMessage());
+            return;
         }
        
     }

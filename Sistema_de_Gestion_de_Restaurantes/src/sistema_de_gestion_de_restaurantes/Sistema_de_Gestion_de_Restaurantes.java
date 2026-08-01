@@ -1,5 +1,6 @@
 package sistema_de_gestion_de_restaurantes;
 
+import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import GestionDeReportes.MenuReportes;
 import GestionDeFacturasYPagos.MenuFacturacionYPagos;
 import GestionDeFacturasYPagos.Factura;
@@ -102,6 +103,7 @@ public class Sistema_de_Gestion_de_Restaurantes {
             try {
                 opcion = Integer.parseInt(teclado.nextLine());
             } catch (NumberFormatException e) {
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido" + "\n" + e.getMessage());
                 opcion = -1; // Si hay error, fuerza opción inválida
             }
 

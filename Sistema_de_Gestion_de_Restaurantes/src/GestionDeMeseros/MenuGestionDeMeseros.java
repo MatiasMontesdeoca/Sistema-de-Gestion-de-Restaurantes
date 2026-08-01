@@ -1,10 +1,12 @@
 package GestionDeMeseros;
 
+import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import ExcepcionesPersonalizadas.MeseroDuplicadoException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMesasYReservas.Mesa;
+
 
 public class MenuGestionDeMeseros {
 
@@ -107,7 +109,7 @@ public class MenuGestionDeMeseros {
             try {
                 return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
-                System.out.print("Ingrese un numero valido: ");
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido");
             }
         }
     }
@@ -127,7 +129,7 @@ public class MenuGestionDeMeseros {
             mesero.setNombre(sc.nextLine().trim());
 
         } catch (IllegalArgumentException e) {
-            System.out.println("Error de datos:" + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar correctamente los datos" + "\n" + e.getMessage());
             return;
         }
 
@@ -135,7 +137,7 @@ public class MenuGestionDeMeseros {
         try{
             if (meseroExiste(mesero.getCedula()));
         } catch(MeseroDuplicadoException e ){
-            System.out.println("Error: " + e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Ya existe un mesero registrado" + "\n" + e.getMessage());
             return;
         }
 
@@ -230,7 +232,8 @@ public class MenuGestionDeMeseros {
             System.out.println("Mesa asignada correctamente.");
 
         } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar un digito entero valido" + "\n" + e.getMessage());
+            return;
         }
     }
 
@@ -269,7 +272,8 @@ public class MenuGestionDeMeseros {
             System.out.println("Mesa retirada del mesero correctamente.");
 
         } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
+            MensajesDeExcepciones.mostrarAdvertencia("Debe ingresar un digito entero valido" + "\n" + e.getMessage());
+            return;
         }
     }
 
