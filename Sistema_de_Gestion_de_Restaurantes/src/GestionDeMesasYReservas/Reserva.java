@@ -44,6 +44,12 @@ public class Reserva {
         if (horaLlegada == null) {
             throw new IllegalArgumentException("La hora de llegada no puede ser nula.");
         }
+        
+        LocalTime apertura = LocalTime.of(8, 0);
+        LocalTime cierre = LocalTime.of(21, 0);
+        if (horaLlegada.isBefore(apertura) || horaLlegada.isAfter(cierre)){
+            throw new IllegalArgumentException("La hora de llegada no puede ser fuera del horario laboral");
+        }
 
         this.horaLlegada = horaLlegada;
     }

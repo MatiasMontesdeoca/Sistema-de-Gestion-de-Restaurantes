@@ -1,5 +1,6 @@
 package GestionDeClientes;
 
+import ExcepcionesPersonalizadas.ClienteDuplicadoException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
@@ -83,14 +84,21 @@ public class MenuGestionDeClientes {
 
         for (Cliente c : clientes) {
 
-            if (c.getCedula().equals(cedula)) return true;
-            if (c.getTelefono().equals(telefono)) return true;
-            if (c.getCorreoElectronico().equalsIgnoreCase(correo)) return true;
+            if (c.getCedula().equals(cedula)){
+                throw new ClienteDuplicadoException("Ya existe un cliente registrado con este numero de cedula");
+            };
+            if (c.getTelefono().equals(telefono)){
+                throw new ClienteDuplicadoException("Ya existe un cliente registrado con este numero de telefono");
+            };
+            if (c.getCorreoElectronico().equalsIgnoreCase(correo)){
+                throw new ClienteDuplicadoException("Ya exiiste un cliente registrado con esta direccion de correo electronico");
+            };
         }
 
         return false;
     }
 
+    
     // ---------------- OPCIÓN 1: REGISTRAR CLIENTE ----------------
     private void registrarCliente() {
 
@@ -117,8 +125,10 @@ public class MenuGestionDeClientes {
         }
 
         // Validación de duplicados
-        if (clienteExiste(c.getCedula(), c.getTelefono(), c.getCorreoElectronico())) {
-            System.out.println("Error: ya existe un cliente con esa cedula, telefono o correo.");
+        try{
+            if(clienteExiste(c.getCedula(), c.getTelefono(), c.getCorreoElectronico()));
+        } catch(ClienteDuplicadoException e){
+            System.out.println("Error: " + e.getMessage());
             return;
         }
 
@@ -149,7 +159,7 @@ public class MenuGestionDeClientes {
         }
 
         System.out.print("Numero de mesa: ");
-        int numeroMesa = Integer.parseInt(sc.nextLine());
+        int numeroMesa = leerEntero();
 
         Mesa mesa = null;
 
@@ -173,7 +183,7 @@ public class MenuGestionDeClientes {
         }
 
         System.out.print("Cantidad de personas: ");
-        int personas = Integer.parseInt(sc.nextLine());
+        int personas = leerEntero();
 
         // Validar capacidad de la mesa
         if (personas <= 0 || personas > mesa.getCapacidad()) {

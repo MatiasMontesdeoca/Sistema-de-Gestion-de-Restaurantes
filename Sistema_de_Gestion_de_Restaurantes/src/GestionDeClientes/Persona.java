@@ -13,12 +13,12 @@ public abstract class Persona {
 
     // Establece la cédula con validación
     public void setcedula(String cedula) {
-        cedula = cedula.trim();
-
         // Validación de null o vacío
         if (cedula == null || cedula.isEmpty()) {
             throw new IllegalArgumentException("El codigo no puede ser nulo o vacio.");
         }
+        
+        cedula = cedula.trim();
 
         // Validación de formato: exactamente 10 dígitos numéricos
         if (!cedula.matches("\\d{10}")) {
@@ -37,12 +37,12 @@ public abstract class Persona {
 
     // Establece el nombre con validación
     public void setNombre(String nombre) {
-        nombre = nombre.trim();
-
         // Validación de null o vacío
         if (nombre == null || nombre.isEmpty()) {
             throw new IllegalArgumentException("El nombre no puede ser nulo o vacío.");
         }
+        
+        nombre = nombre.trim();
 
         // Expresión regular: mínimo dos palabras (nombre + apellido)
         // permite letras con acentos y ñ

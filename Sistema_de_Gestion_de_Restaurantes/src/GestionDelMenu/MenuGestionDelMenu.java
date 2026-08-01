@@ -1,5 +1,6 @@
 package GestionDelMenu;
 
+import ExcepcionesPersonalizadas.PlatoDuplicadoException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -86,7 +87,26 @@ public class MenuGestionDelMenu {
 
         }
     }
+    
+    // Lee que se ingrese (1) True o (0) False para la disponibilidad con validación
+        private boolean leerboolean() {
 
+        while (true) {
+
+            try {
+                int valor = Integer.parseInt(sc.nextLine());
+                if (valor == 1){
+                    return true;
+                }
+                else if(valor == 0){
+                    return false;
+                }
+            }   catch(NumberFormatException e){
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+                
     // Registrar un nuevo plato en el sistema
     private void registrarPlato() {
 
@@ -122,8 +142,7 @@ public class MenuGestionDelMenu {
 
             // Evita duplicados por nombre
             if (buscarPorNombre(nombre) != null) {
-                System.out.println("Ya existe un plato con ese nombre.");
-                return;
+                throw new PlatoDuplicadoException("Ya existe un plato registrado con este nombre");
             }
 
             plato.setNombre(nombre);
@@ -133,16 +152,19 @@ public class MenuGestionDelMenu {
             plato.setPrecio(leerDouble());
 
             // Disponibilidad del plato
-            System.out.print("Disponible (true/false): ");
-            plato.setDisponibilidad(Boolean.parseBoolean(sc.nextLine()));
+            System.out.println("Ingrese 1 para DISPONIBLE o 0 para AGOTADO");
+            plato.setDisponibilidad(leerboolean());
 
             // Se agrega a la lista global de platos
             platos.add(plato);
 
             System.out.println("Plato registrado correctamente.");
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+            
+        } catch (PlatoDuplicadoException e){
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -226,8 +248,8 @@ public class MenuGestionDelMenu {
                     }
 
                     case 3 -> {
-                        System.out.print("Nuevo estado (true/false): ");
-                        plato.setDisponibilidad(Boolean.parseBoolean(sc.nextLine()));
+                        System.out.print("Nuevo estado (Disponible/Agotado): ");
+                        plato.setDisponibilidad(leerboolean());
                         System.out.println("Disponibilidad actualizada.");
                     }
 
@@ -244,7 +266,7 @@ public class MenuGestionDelMenu {
 
             } while (op != 5);
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }

@@ -1,5 +1,6 @@
 package GestionDeMeseros;
 
+import ExcepcionesPersonalizadas.MeseroDuplicadoException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
@@ -41,7 +42,7 @@ public class MenuGestionDeMeseros {
             System.out.println("6. Volver al menu principal");
             System.out.print("Seleccione una opcion: ");
 
-            opcion = Integer.parseInt(sc.nextLine());
+            opcion = leerEntero();
 
             // Ejecución según opción seleccionada
             switch (opcion) {
@@ -80,7 +81,9 @@ public class MenuGestionDeMeseros {
     private boolean meseroExiste(String cedula) {
 
         for (Mesero m : meseros) {
-            if (m.getCedula().equals(cedula)) return true;
+            if (m.getCedula().equals(cedula)){
+                throw new MeseroDuplicadoException("Ya existe un mesero registrado con ese numero de cedula");
+            };
         }
 
         return false;
@@ -97,7 +100,19 @@ public class MenuGestionDeMeseros {
 
         return null;
     }
+    
+    // Lee un número entero de forma segura (evita errores de formato)
+    private int leerEntero() {
+        while (true) {
+            try {
+                return Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Ingrese un numero valido: ");
+            }
+        }
+    }
 
+    
     // ---------------- OPCIÓN 1: REGISTRAR MESERO ----------------
     private void registrarMesero() {
 
@@ -117,8 +132,10 @@ public class MenuGestionDeMeseros {
         }
 
         // Validación de duplicados
-        if (meseroExiste(mesero.getCedula())) {
-            System.out.println("Error: Ya existe un mesero registrado con ese numero de cedula");
+        try{
+            if (meseroExiste(mesero.getCedula()));
+        } catch(MeseroDuplicadoException e ){
+            System.out.println("Error: " + e.getMessage());
             return;
         }
 
@@ -175,7 +192,7 @@ public class MenuGestionDeMeseros {
             }
 
             System.out.print("Numero de mesa: ");
-            int numeroMesa = Integer.parseInt(sc.nextLine());
+            int numeroMesa = leerEntero();
 
             // Verifica que la mesa no esté asignada a otro mesero
             for (Mesero m : meseros) {
@@ -212,7 +229,7 @@ public class MenuGestionDeMeseros {
 
             System.out.println("Mesa asignada correctamente.");
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -233,7 +250,7 @@ public class MenuGestionDeMeseros {
             }
 
             System.out.print("Numero de la mesa a retirar: ");
-            int numeroMesa = Integer.parseInt(sc.nextLine());
+            int numeroMesa = leerEntero();
 
             Mesa mesa = buscarMesaPorNumero(numeroMesa);
 
@@ -251,7 +268,7 @@ public class MenuGestionDeMeseros {
 
             System.out.println("Mesa retirada del mesero correctamente.");
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
         }
     }

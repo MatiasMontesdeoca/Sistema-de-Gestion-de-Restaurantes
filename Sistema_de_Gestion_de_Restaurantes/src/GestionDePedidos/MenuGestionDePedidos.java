@@ -122,7 +122,7 @@ public class MenuGestionDePedidos {
     private Mesa buscarMesa() {
 
         System.out.print("Numero de mesa: ");
-        int numero = Integer.parseInt(sc.nextLine());
+        int numero = leerEntero();
 
         for (Mesa mesa : mesas) {
             if (mesa.getNumero() == numero) {
@@ -149,7 +149,7 @@ public class MenuGestionDePedidos {
         }
 
         System.out.print("Cantidad: ");
-        int cantidad = Integer.parseInt(sc.nextLine());
+        int cantidad = leerEntero();
 
         pedido.agregarPlato(plato, cantidad);
     }
@@ -269,7 +269,7 @@ public class MenuGestionDePedidos {
                 System.out.println("No hay pedido para esa mesa.");
                 return;
             }
-
+            
             int op;
 
             do {
@@ -306,7 +306,7 @@ public class MenuGestionDePedidos {
 
             } while (op != 5);
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }

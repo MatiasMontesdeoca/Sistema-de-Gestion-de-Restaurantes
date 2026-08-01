@@ -83,13 +83,20 @@ public class Mesa {
 
     // Establece la capacidad de la mesa con validación
     public void setCapacidad(int capacidad) {
-        if (capacidad <= 0) {
-            throw new IllegalArgumentException("La capacidad debe ser mayor que cero.");
-        }
-
-        this.capacidad = capacidad;
+        if (this.estado == EstadoMesa.OCUPADA && capacidad < this.personasOcupando) {
+        throw new IllegalArgumentException(
+            "No se puede reducir la capacidad a " + capacidad + 
+            " porque actualmente hay " + this.personasOcupando + " personas en la mesa."
+        );
     }
 
+    if (capacidad <= 0) {
+        throw new IllegalArgumentException("La capacidad debe ser mayor a cero.");
+    }
+
+    this.capacidad = capacidad;
+}
+    
     // Obtiene el estado actual de la mesa
     public EstadoMesa getEstado() {
         return estado;

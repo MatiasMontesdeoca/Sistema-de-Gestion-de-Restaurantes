@@ -20,12 +20,13 @@ public class Cliente extends Persona {
     }
 
     // Establece el teléfono del cliente con validación
-    public void setTelefono(String telefono) {
-        telefono = telefono.trim();
-
+    public void setTelefono(String telefono) {     
         if (telefono == null || telefono.isEmpty()) {
             throw new IllegalArgumentException("El telefono no puede ser nulo o vacio.");
         }
+        
+        telefono = telefono.trim();
+
         if (!telefono.matches("\\d{10}")) {
             throw new IllegalArgumentException("El numero de telefono ingresado debe contener 10 digitos numericos");
         }
@@ -44,6 +45,7 @@ public class Cliente extends Persona {
         }
 
         String correo = correoElectronico.trim();
+        
         String regex = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
 
         if (!correo.matches(regex)) {

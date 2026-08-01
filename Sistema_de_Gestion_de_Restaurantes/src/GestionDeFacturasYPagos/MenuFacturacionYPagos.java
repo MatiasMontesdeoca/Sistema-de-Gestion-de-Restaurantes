@@ -1,5 +1,6 @@
 package GestionDeFacturasYPagos;
 
+import ExcepcionesPersonalizadas.MetodoDePagoInvalido;
 import GestionDePedidos.Pedido;
 import GestionDePedidos.EstadoPedido;
 import GestionDeMesasYReservas.EstadoMesa;
@@ -71,6 +72,20 @@ public class MenuFacturacionYPagos {
             }
         }
     }
+    
+        // Lee un número decimal con validación
+    private double leerDouble() {
+
+        while (true) {
+
+            try {
+                return Double.parseDouble(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Ingrese un numero valido: ");
+            }
+
+        }
+    }
 
     // Busca un pedido activo por número de mesa
     private Pedido buscarPedidoPorMesa(int numeroMesa) {
@@ -90,7 +105,7 @@ public class MenuFacturacionYPagos {
         System.out.println("1. Descuento por visitas");
         System.out.println("2. Cupón");
 
-        int op = Integer.parseInt(teclado.nextLine());
+        int op = leerEntero();
 
         double descuento = 0;
 
@@ -110,7 +125,7 @@ public class MenuFacturacionYPagos {
         } else if (op == 2) {
 
             System.out.print("Porcentaje de cupón: ");
-            double porc = Double.parseDouble(teclado.nextLine());
+            double porc = leerDouble();
 
             descuento = pedido.calcularTotalSinDescuento() * (porc / 100);
         }
@@ -122,7 +137,7 @@ public class MenuFacturacionYPagos {
     private void registrarPagoFactura() {
 
         System.out.print("Número de mesa: ");
-        int mesaNum = Integer.parseInt(teclado.nextLine());
+        int mesaNum = leerEntero();
 
         // Buscar pedido activo asociado a la mesa
         Pedido pedido = buscarPedidoPorMesa(mesaNum);
@@ -140,11 +155,10 @@ public class MenuFacturacionYPagos {
         System.out.println("2. Tarjeta");
         System.out.println("3. Transferencia");
 
-        int op = Integer.parseInt(teclado.nextLine());
+        int op = leerEntero();
 
         if (op < 1 || op > 3) {
-            System.out.println("Método inválido.");
-            return;
+           throw new MetodoDePagoInvalido;
         }
 
         // Creación de la factura

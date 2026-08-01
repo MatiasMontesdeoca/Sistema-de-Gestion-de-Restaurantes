@@ -1,7 +1,10 @@
 package GestionDeMesasYReservas;
 
+import ExcepcionesPersonalizadas.MesaDuplicadaException;
+import ExcepcionesPersonalizadas.MesaReservadaException;
 import GestionDeMeseros.Mesero;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -110,7 +113,7 @@ public class MenuGestionDeMesasYReservas {
         while (true) {
             try {
                 return LocalTime.parse(sc.nextLine());
-            } catch (Exception e) {
+            } catch (DateTimeParseException e) {
                 System.out.print("Formato incorrecto. Ingrese la hora (HH:mm): ");
             }
         }
@@ -139,10 +142,10 @@ public class MenuGestionDeMesasYReservas {
             mesa.setNumero(leerEntero());
 
             // Validar que no exista otra mesa con el mismo número
-            if (buscarPorNumero(mesa.getNumero()) != null) {
-                System.out.println("Ya existe una mesa con ese numero.");
-                return;
-            }
+            if (buscarPorNumero(mesa.getNumero()) != null){
+                throw new MesaDuplicadaException("Ya existe una mesa registrada con ese numero identificador");
+            } 
+
 
             // Si es una mesa nueva mayor a 10, se pide capacidad manual
             if (mesa.getNumero() > 10) {
@@ -158,8 +161,11 @@ public class MenuGestionDeMesasYReservas {
             mesas.add(mesa);
 
             System.out.println("Mesa registrada correctamente.");
+            
+        } catch(MesaDuplicadaException e){
+            System.out.println("Error: " + e.getMessage());
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -257,8 +263,10 @@ public class MenuGestionDeMesasYReservas {
                     System.out.println("Opcion invalida.");
             }
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (IllegalStateException e){
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -279,8 +287,7 @@ public class MenuGestionDeMesasYReservas {
 
             // Verificar disponibilidad
             if (!mesa.estaDisponible()) {
-                System.out.println("La mesa no se encuentra disponible.");
-                return;
+                throw new MesaReservadaException("Esta mesa ya se encuentra reservada");
             }
 
             // Crear nueva reserva
@@ -297,9 +304,13 @@ public class MenuGestionDeMesasYReservas {
 
             System.out.println("Reserva registrada correctamente.");
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        
+        } catch (MesaReservadaException e) {
+            System.out.println("Error: " + e.getMessage());
         }
+       
     }
 
     // ---------------- OPCIÓN 6: ELIMINAR MESA ----------------
