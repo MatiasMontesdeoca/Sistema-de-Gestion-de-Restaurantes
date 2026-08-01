@@ -1,10 +1,12 @@
 package GestionDeClientes;
 
 import java.util.Objects;
+import java.io.Serializable;
 
-public class Cliente extends Persona {
+public class Cliente extends Persona implements Serializable{
 
     // Atributos
+    private static final long serialVersionUID = 1L;
     private String telefono;
     private String correoElectronico;
     private int visitasMes;
