@@ -56,22 +56,22 @@ El sistema utiliza **serialización en Java** para almacenar la información en 
 
 Los archivos utilizados son los siguientes:
 
-## clientes.dat
+### clientes.dat
 Almacena la información de todos los clientes registrados, incluyendo sus datos personales, visitas realizadas y descuentos disponibles.
 
-## meseros.dat
+### meseros.dat
 Contiene la información de los meseros registrados, junto con las mesas asignadas y su historial de trabajo.
 
-## mesas.dat
+### mesas.dat
 Guarda la información de las mesas del restaurante, incluyendo su capacidad, estado (**Libre**, **Ocupada** o **Reservada**), cliente actual y reservas activas.
 
-## platos.dat
+### platos.dat
 Almacena todos los platos registrados en el menú junto con su categoría, precio y disponibilidad.
 
-## pedidos.dat
+### pedidos.dat
 Guarda los pedidos realizados por los clientes, incluyendo la mesa asociada, los platos solicitados, el estado del pedido y su valor.
 
-## facturas.dat
+### facturas.dat
 Almacena las facturas generadas después del registro de cada pago.
 
 ---
