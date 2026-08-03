@@ -34,7 +34,7 @@ public class Mesa implements Serializable{
         return numero;
     }
 
-    // Establece el número de la mesa y asigna capacidad predeterminada según rango
+    // Establece el número de la mesa
     public void setNumero(int numero) {
 
         if (numero <= 0) {
@@ -42,39 +42,6 @@ public class Mesa implements Serializable{
         }
 
         this.numero = numero;
-
-        // Asignación automática de capacidad para mesas predefinidas
-        switch (numero) {
-
-            case 1:
-            case 2:
-            case 3:
-                capacidad = 2;
-                break;
-
-            case 4:
-            case 5:
-            case 6:
-                capacidad = 4;
-                break;
-
-            case 7:
-            case 8:
-                capacidad = 6;
-                break;
-
-            case 9:
-                capacidad = 8;
-                break;
-
-            case 10:
-                capacidad = 10;
-                break;
-
-            default:
-                // Mesas nuevas deben definir su capacidad manualmente
-                capacidad = 0;
-        }
     }
 
     // Obtiene la capacidad de la mesa

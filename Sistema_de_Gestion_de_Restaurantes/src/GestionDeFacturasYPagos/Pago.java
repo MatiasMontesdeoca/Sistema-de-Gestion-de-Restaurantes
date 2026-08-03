@@ -1,8 +1,9 @@
 package GestionDeFacturasYPagos;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Pago {
+public class Pago implements Serializable{
 
     // Atributo: dinero pagado en efectivo
     private double efectivo;

@@ -1,5 +1,6 @@
 package GestionDelMenu;
 
+import ExcepcionesPersonalizadas.ElementoNoEncontradoException;
 import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import ExcepcionesPersonalizadas.PlatoDuplicadoException;
 import Serializacion.ArchivoDatos;
@@ -192,12 +193,16 @@ public class MenuGestionDelMenu {
     private void buscarPlato() {
 
         System.out.print("Nombre del plato: ");
-        String nombre = sc.nextLine();
+        String nombre = sc.nextLine().trim();
 
         Plato plato = buscarPorNombre(nombre);
 
         if (plato == null) {
-            System.out.println("Plato no encontrado.");
+            try {
+                throw new ElementoNoEncontradoException("Plato '" + nombre + "' no fue encontrado.");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+            }
         } else {
             System.out.println(plato);
         }
@@ -209,13 +214,17 @@ public class MenuGestionDelMenu {
         try {
 
             System.out.print("Nombre del plato: ");
-            String nombre = sc.nextLine();
+            String nombre = sc.nextLine().trim();
 
             Plato plato = buscarPorNombre(nombre);
 
             if (plato == null) {
-                System.out.println("Plato no encontrado.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("Plato '" + nombre + "' no fue encontrado.");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
 
             int op;

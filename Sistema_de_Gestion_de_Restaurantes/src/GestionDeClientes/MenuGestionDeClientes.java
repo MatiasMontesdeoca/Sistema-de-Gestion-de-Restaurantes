@@ -1,7 +1,9 @@
 package GestionDeClientes;
 
 import ExcepcionesPersonalizadas.ClienteDuplicadoException;
+import ExcepcionesPersonalizadas.ElementoNoEncontradoException;
 import ExcepcionesPersonalizadas.MensajesDeExcepciones;
+import ExcepcionesPersonalizadas.NoHayMesasRegistradasException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
@@ -128,7 +130,7 @@ public class MenuGestionDeClientes {
 
         // Validación de duplicados
         try{
-            if(clienteExiste(c.getCedula(), c.getTelefono(), c.getCorreoElectronico()));
+            clienteExiste(c.getCedula(), c.getTelefono(), c.getCorreoElectronico());
         } catch(ClienteDuplicadoException e){
             MensajesDeExcepciones.mostrarAdvertencia("Ya existe un cliente registrado" + "\n" + e.getMessage());
             return;
@@ -142,6 +144,15 @@ public class MenuGestionDeClientes {
 
     // ---------------- OPCIÓN 2: SENTAR CLIENTE EN MESA ----------------
     private void sentarCliente() {
+
+        if (mesas == null || mesas.isEmpty()) {
+            try {
+                throw new NoHayMesasRegistradasException();
+            } catch (NoHayMesasRegistradasException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
+        }
 
         System.out.print("Cedula del cliente: ");
         String cedula = sc.nextLine().trim();
@@ -157,8 +168,12 @@ public class MenuGestionDeClientes {
         }
 
         if (cliente == null) {
-            System.out.println("Cliente no encontrado.");
-            return;
+            try {
+                throw new ElementoNoEncontradoException("Cliente con cedula " + cedula + " no fue encontrado.");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
         }
 
         System.out.print("Numero de mesa: ");
@@ -175,8 +190,12 @@ public class MenuGestionDeClientes {
         }
 
         if (mesa == null) {
-            System.out.println("Mesa no encontrada.");
-            return;
+            try {
+                throw new ElementoNoEncontradoException("Mesa #" + numeroMesa + " no fue encontrada.");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
         }
 
         // Verificar disponibilidad de la mesa
@@ -248,14 +267,18 @@ public class MenuGestionDeClientes {
             }
         }
 
-        System.out.println("Cliente no encontrado.");
+        try {
+            throw new ElementoNoEncontradoException("Cliente con cedula " + cedula + " no fue encontrado.");
+        } catch (ElementoNoEncontradoException e) {
+            MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+        }
     }
 
     // ---------------- OPCIÓN 5: VERIFICAR DESCUENTO ----------------
     private void verificarDescuentoCliente() {
 
         System.out.print("Cedula del cliente: ");
-        String cedula = sc.nextLine();
+        String cedula = sc.nextLine().trim();
 
         // Buscar cliente
         for (Cliente c : clientes) {
@@ -271,6 +294,10 @@ public class MenuGestionDeClientes {
             }
         }
 
-        System.out.println("Cliente no encontrado.");
+        try {
+            throw new ElementoNoEncontradoException("Cliente con cedula " + cedula + " no fue encontrado.");
+        } catch (ElementoNoEncontradoException e) {
+            MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+        }
     }
 }

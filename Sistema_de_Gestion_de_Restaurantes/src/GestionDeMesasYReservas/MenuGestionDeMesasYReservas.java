@@ -1,6 +1,7 @@
 package GestionDeMesasYReservas;
 
 import ExcepcionesPersonalizadas.MensajesDeExcepciones;
+import ExcepcionesPersonalizadas.ElementoNoEncontradoException;
 import ExcepcionesPersonalizadas.MesaDuplicadaException;
 import ExcepcionesPersonalizadas.MesaReservadaException;
 import GestionDeMeseros.Mesero;
@@ -150,16 +151,8 @@ public class MenuGestionDeMesasYReservas {
             } 
 
 
-            // Si es una mesa nueva mayor a 10, se pide capacidad manual
-            if (mesa.getNumero() > 10) {
-                System.out.print("Capacidad: ");
-                mesa.setCapacidad(leerEntero());
-            } else {
-                // Mesas pequeñas tienen capacidad predeterminada
-                System.out.println("La mesa " + mesa.getNumero()
-                        + " tiene una capacidad predeterminada de "
-                        + mesa.getCapacidad() + " personas.");
-            }
+            System.out.print("Capacidad de la mesa: ");
+            mesa.setCapacidad(leerEntero());
 
             mesas.add(mesa);
             ArchivoDatos.guardar(mesas, "mesas.dat");
@@ -205,7 +198,11 @@ public class MenuGestionDeMesasYReservas {
         Mesa mesa = buscarPorNumero(numero);
 
         if (mesa == null) {
-            System.out.println("Mesa no encontrada.");
+            try {
+                throw new ElementoNoEncontradoException("Mesa #" + numero + " no fue encontrada.");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+            }
         } else {
             System.out.println(mesa);
 
@@ -227,8 +224,12 @@ public class MenuGestionDeMesasYReservas {
             Mesa mesa = buscarPorNumero(numero);
 
             if (mesa == null) {
-                System.out.println("Mesa no encontrada.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("Mesa #" + numero + " no fue encontrada.");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
 
             System.out.println("\n1. Cambiar capacidad");
@@ -291,8 +292,12 @@ public class MenuGestionDeMesasYReservas {
             Mesa mesa = buscarPorNumero(numero);
 
             if (mesa == null) {
-                System.out.println("Mesa no encontrada.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("Mesa #" + numero + " no fue encontrada.");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
 
             // Verificar disponibilidad
@@ -334,8 +339,12 @@ public class MenuGestionDeMesasYReservas {
         Mesa mesa = buscarPorNumero(numero);
 
         if (mesa == null) {
-            System.out.println("Mesa no encontrada.");
-            return;
+            try {
+                throw new ElementoNoEncontradoException("Mesa #" + numero + " no fue encontrada.");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
         }
 
         mesas.remove(mesa);

@@ -1,10 +1,11 @@
 package GestionDeFacturasYPagos;
 
 import GestionDePedidos.Pedido;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Factura {
+public class Factura implements Serializable{
 
     // Atributo: identificador único de la factura
     private String numeroFactura;

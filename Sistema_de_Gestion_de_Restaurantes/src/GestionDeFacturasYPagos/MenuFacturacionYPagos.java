@@ -1,5 +1,6 @@
 package GestionDeFacturasYPagos;
 
+import ExcepcionesPersonalizadas.ElementoNoEncontradoException;
 import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import ExcepcionesPersonalizadas.MetodoDePagoInvalidoException;
 import GestionDePedidos.Pedido;
@@ -152,8 +153,12 @@ public class MenuFacturacionYPagos {
         Pedido pedido = buscarPedidoPorMesa(mesaNum);
 
         if (pedido == null) {
-            System.out.println("Pedido no encontrado.");
-            return;
+            try {
+                throw new ElementoNoEncontradoException("No existe un pedido activo pendiente de pago para la mesa #" + mesaNum + ".");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
         }
 
         // Calcular descuento según tipo seleccionado
@@ -227,19 +232,23 @@ public class MenuFacturacionYPagos {
     private void buscarFactura() {
 
         System.out.print("Ingrese cedula del cliente o numero de factura: ");
-        String dato = teclado.nextLine();
+        String dato = teclado.nextLine().trim();
 
         // Buscar coincidencia por número de factura o cédula del cliente
         for (Factura f : facturas) {
 
-            if (f.getNumeroFactura().equalsIgnoreCase(dato) ||
-                (f.getPedido().getCliente().getCedula().equals(dato))) {
+            if (f != null && (f.getNumeroFactura().equalsIgnoreCase(dato) ||
+                (f.getPedido() != null && f.getPedido().getCliente() != null && f.getPedido().getCliente().getCedula().equals(dato)))) {
 
                 System.out.println(f);
                 return;
             }
         }
 
-        System.out.println("Factura no encontrada.");
+        try {
+            throw new ElementoNoEncontradoException("Factura o cliente '" + dato + "' no fue encontrado.");
+        } catch (ElementoNoEncontradoException e) {
+            MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+        }
     }
 }

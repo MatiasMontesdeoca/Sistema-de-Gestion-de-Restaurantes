@@ -31,15 +31,8 @@ public class Sistema_de_Gestion_de_Restaurantes {
         ArrayList<Plato> platos = ArchivoDatos.cargar("platos.dat");
         ArrayList<Pedido> pedidos = ArchivoDatos.cargar("pedidos.dat");
         ArrayList<Factura> facturas = ArchivoDatos.cargar("facturas.dat");
-        ArrayList<DetallePedido> detalles = ArchivoDatos.cargar("detalles.dat");
-
-        // Se crean 10 mesas iniciales con números del 1 al 10
-        // Estas mesas forman la configuración base del restaurante
-        for (int i = 1; i <= 10; i++) {
-            Mesa mesa = new Mesa();
-            mesa.setNumero(i);
-            mesas.add(mesa);
-        }
+        ArrayList<DetallePedido> detalles = new ArrayList<>();
+        ArrayList<String> reportesGenerados = ArchivoDatos.cargar("reportes.dat");
 
         // ===================== MENÚS DEL SISTEMA =====================
 
@@ -77,7 +70,8 @@ public class Sistema_de_Gestion_de_Restaurantes {
                 new MenuReportes(
                         facturas,
                         pedidos,
-                        detalles);
+                        detalles,
+                        reportesGenerados);
 
         // Scanner principal para leer opciones del menú principal
         Scanner teclado = new Scanner(System.in);

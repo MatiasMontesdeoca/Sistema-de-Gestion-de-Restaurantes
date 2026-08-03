@@ -1,7 +1,10 @@
 package GestionDePedidos;
 
+import ExcepcionesPersonalizadas.ElementoNoEncontradoException;
 import ExcepcionesPersonalizadas.MensajesDeExcepciones;
+import ExcepcionesPersonalizadas.NoHayMesasRegistradasException;
 import GestionDelMenu.Plato;
+import GestionDelMenu.CategoriaPlato;
 import GestionDeMesasYReservas.Mesa;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMeseros.Mesero;
@@ -47,6 +50,22 @@ public class MenuGestionDePedidos {
         this.mesas = mesas;
         this.platos = platos;
         this.sc = new Scanner(System.in);
+
+        // Inicializar el contador de pedidos basado en los pedidos serializados existentes
+        this.contadorPedidos = 1;
+        if (pedidos != null) {
+            for (Pedido p : pedidos) {
+                if (p != null && p.getNumeroPedido() != null && p.getNumeroPedido().startsWith("P")) {
+                    try {
+                        int num = Integer.parseInt(p.getNumeroPedido().substring(1));
+                        if (num >= this.contadorPedidos) {
+                            this.contadorPedidos = num + 1;
+                        }
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+            }
+        }
     }
 
     // Inicia el menú principal de gestión de pedidos
@@ -136,56 +155,129 @@ public class MenuGestionDePedidos {
         return null;
     }
 
-    // Agrega un plato al pedido seleccionado
+    // Agrega un plato al pedido seleccionado permitiendo elegirlo por número agrupado por categorías
     private void agregarPlato(Pedido pedido) {
 
-        Plato plato = buscarPlato();
+        Plato plato = seleccionarPlatoDelMenu();
 
         if (plato == null) {
-            System.out.println("Plato no encontrado.");
             return;
         }
 
         if (!plato.getDisponibilidad()) {
-            System.out.println("El plato no está disponible.");
+            System.out.println("El plato seleccionado no está disponible.");
             return;
         }
 
         System.out.print("Cantidad: ");
         int cantidad = leerEntero();
 
-        pedido.agregarPlato(plato, cantidad);
-        ArchivoDatos.guardar(pedidos, "pedidos.dat");
-        System.out.println("Plato agregado correctamente");
-    }
-
-    // Busca un plato por nombre dentro del menú
-    private Plato buscarPlato() {
-
-        System.out.print("Nombre del plato: ");
-        String nombre = sc.nextLine();
-
-        for (Plato plato : platos) {
-
-            if (plato.getNombre().equalsIgnoreCase(nombre)) {
-                return plato;
-            }
-        }
-
-        return null;
-    }
-
-    // Elimina un plato del pedido
-    private void eliminarPlato(Pedido pedido) {
-
-        Plato plato = buscarPlato();
-
-        if (plato == null) {
-            System.out.println("Plato no encontrado.");
+        if (cantidad <= 0) {
+            System.out.println("Cantidad invalida.");
             return;
         }
 
-        pedido.eliminarPlato(plato);
+        pedido.agregarPlato(plato, cantidad);
+        ArchivoDatos.guardar(pedidos, "pedidos.dat");
+        System.out.println("Plato agregado correctamente.");
+    }
+
+    // Muestra el menú de platos agrupados por categorías con numeración continua y permite seleccionar uno
+    private Plato seleccionarPlatoDelMenu() {
+
+        if (platos == null || platos.isEmpty()) {
+            System.out.println("No hay platos registrados en el menú.");
+            return null;
+        }
+
+        ArrayList<Plato> listaOpciones = new ArrayList<>();
+
+        CategoriaPlato[] categorias = {
+            CategoriaPlato.ENTRADA,
+            CategoriaPlato.PLATO_FUERTE,
+            CategoriaPlato.POSTRE,
+            CategoriaPlato.BEBIDA
+        };
+
+        String[] nombresCategoria = {
+            "Entradas",
+            "Plato Fuerte",
+            "Postre",
+            "Bebida"
+        };
+
+        System.out.println("\n===== SELECCION DE PLATOS =====");
+
+        for (int c = 0; c < categorias.length; c++) {
+            CategoriaPlato cat = categorias[c];
+            boolean tituloMostrado = false;
+
+            for (Plato p : platos) {
+                if (p.getCategoria() == cat) {
+                    if (!tituloMostrado) {
+                        System.out.println("\n" + nombresCategoria[c] + "-");
+                        tituloMostrado = true;
+                    }
+                    listaOpciones.add(p);
+                    int numero = listaOpciones.size();
+                    String estado = p.getDisponibilidad() ? "Disponible" : "No disponible";
+                    System.out.printf("%d.- %s - $%.2f (%s)%n",
+                            numero, p.getNombre(), p.getPrecio(), estado);
+                }
+            }
+        }
+
+        if (listaOpciones.isEmpty()) {
+            System.out.println("No hay platos en el menú.");
+            return null;
+        }
+
+        System.out.print("\nSeleccione el numero del plato (0 para cancelar): ");
+        int opcion = leerEntero();
+
+        if (opcion == 0) {
+            return null;
+        }
+
+        if (opcion < 1 || opcion > listaOpciones.size()) {
+            System.out.println("Opcion invalida.");
+            return null;
+        }
+
+        return listaOpciones.get(opcion - 1);
+    }
+
+    // Elimina un plato del pedido seleccionándolo por número
+    private void eliminarPlato(Pedido pedido) {
+
+        ArrayList<DetallePedido> detalles = pedido.getDetalles();
+
+        if (detalles == null || detalles.isEmpty()) {
+            System.out.println("El pedido no contiene platos.");
+            return;
+        }
+
+        System.out.println("\n--- PLATOS EN EL PEDIDO ---");
+        for (int i = 0; i < detalles.size(); i++) {
+            DetallePedido d = detalles.get(i);
+            System.out.printf("%d.- %s (Cantidad: %d)%n",
+                    (i + 1), d.getPlato().getNombre(), d.getCantidad());
+        }
+
+        System.out.print("\nSeleccione el numero del plato a eliminar (0 para cancelar): ");
+        int opcion = leerEntero();
+
+        if (opcion == 0) {
+            return;
+        }
+
+        if (opcion < 1 || opcion > detalles.size()) {
+            System.out.println("Opcion invalida.");
+            return;
+        }
+
+        Plato platoAEliminar = detalles.get(opcion - 1).getPlato();
+        pedido.eliminarPlato(platoAEliminar);
         ArchivoDatos.guardar(pedidos, "pedidos.dat");
         System.out.println("Plato eliminado del pedido.");
     }
@@ -224,11 +316,24 @@ public class MenuGestionDePedidos {
     // ---------------- OPCIÓN 1: REGISTRAR PEDIDO ----------------
     private void registrarPedido() {
 
+        if (mesas == null || mesas.isEmpty()) {
+            try {
+                throw new NoHayMesasRegistradasException();
+            } catch (NoHayMesasRegistradasException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
+        }
+
         Mesa mesa = buscarMesa();
 
         if (mesa == null) {
-            System.out.println("Mesa no encontrada.");
-            return;
+            try {
+                throw new ElementoNoEncontradoException("La mesa especificada no fue encontrada.");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
         }
 
         // Solo se pueden crear pedidos en mesas ocupadas
@@ -270,15 +375,23 @@ public class MenuGestionDePedidos {
             Mesa mesa = buscarMesa();
 
             if (mesa == null) {
-                System.out.println("Mesa no encontrada.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("La mesa especificada no fue encontrada.");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
 
             Pedido pedido = buscarPedidoPorMesa(mesa);
 
             if (pedido == null) {
-                System.out.println("No hay pedido para esa mesa.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("No existe un pedido activo para la mesa #" + mesa.getNumero() + ".");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
             
             int op;
@@ -358,8 +471,12 @@ public class MenuGestionDePedidos {
         Mesa mesa = buscarMesa();
 
         if (mesa == null) {
-            System.out.println("Mesa no encontrada.");
-            return;
+            try {
+                throw new ElementoNoEncontradoException("La mesa especificada no fue encontrada.");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
         }
 
         boolean encontrado = false;
@@ -381,7 +498,11 @@ public class MenuGestionDePedidos {
         }
 
         if (!encontrado) {
-            System.out.println("No hay pedidos para esa mesa.");
+            try {
+                throw new ElementoNoEncontradoException("No existen pedidos registrados para la mesa #" + mesa.getNumero() + ".");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+            }
         }
     }
 }

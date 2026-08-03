@@ -1,5 +1,6 @@
 package GestionDeMeseros;
 
+import ExcepcionesPersonalizadas.ElementoNoEncontradoException;
 import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import ExcepcionesPersonalizadas.MeseroDuplicadoException;
 import java.util.ArrayList;
@@ -186,13 +187,17 @@ public class MenuGestionDeMeseros {
         try {
 
             System.out.print("Cedula del mesero: ");
-            String cedula = sc.nextLine();
+            String cedula = sc.nextLine().trim();
 
             Mesero mesero = buscarMeseroPorcedula(cedula);
 
             if (mesero == null) {
-                System.out.println("Mesero no encontrado.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("Mesero con cedula " + cedula + " no fue encontrado.");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
 
             System.out.print("Numero de mesa: ");
@@ -211,8 +216,12 @@ public class MenuGestionDeMeseros {
             Mesa mesa = buscarMesaPorNumero(numeroMesa);
 
             if (mesa == null) {
-                System.out.println("Mesa no encontrada.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("Mesa #" + numeroMesa + " no fue encontrada.");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
 
             int personas = mesa.getPersonasOcupando();
@@ -249,13 +258,17 @@ public class MenuGestionDeMeseros {
         try {
 
             System.out.print("cedula del mesero: ");
-            String cedula = sc.nextLine();
+            String cedula = sc.nextLine().trim();
 
             Mesero mesero = buscarMeseroPorcedula(cedula);
 
             if (mesero == null) {
-                System.out.println("Mesero no encontrado.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("Mesero con cedula " + cedula + " no fue encontrado.");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
 
             System.out.print("Numero de la mesa a retirar: ");
@@ -264,8 +277,12 @@ public class MenuGestionDeMeseros {
             Mesa mesa = buscarMesaPorNumero(numeroMesa);
 
             if (mesa == null) {
-                System.out.println("Mesa no encontrada.");
-                return;
+                try {
+                    throw new ElementoNoEncontradoException("Mesa #" + numeroMesa + " no fue encontrada.");
+                } catch (ElementoNoEncontradoException e) {
+                    MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                    return;
+                }
             }
 
             if (!mesero.getMesasAsignadas().contains(mesa)) {
@@ -288,13 +305,17 @@ public class MenuGestionDeMeseros {
     private void mostrarCargaMesero() {
 
         System.out.print("cedula del mesero: ");
-        String cedula = sc.nextLine();
+        String cedula = sc.nextLine().trim();
 
         Mesero mesero = buscarMeseroPorcedula(cedula);
 
         if (mesero == null) {
-            System.out.println("Mesero no encontrado.");
-            return;
+            try {
+                throw new ElementoNoEncontradoException("Mesero con cedula " + cedula + " no fue encontrado.");
+            } catch (ElementoNoEncontradoException e) {
+                MensajesDeExcepciones.mostrarAdvertencia(e.getMessage());
+                return;
+            }
         }
 
         // Información general del mesero
