@@ -5,30 +5,17 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Factura implements Serializable{
+public class Factura implements Serializable {
 
-    // Atributo: identificador único de la factura
     private String numeroFactura;
-
-    // Fecha y hora en la que se crea la factura
     private LocalDateTime fecha;
-
-    // Pedido asociado a la factura
     private Pedido pedido;
-
-    // Suma total de los productos antes de descuentos
     private double subtotal;
-
-    // Monto total de descuento aplicado (en dinero)
     private double descuentoAplicado;
-
-    // Total final a pagar después del descuento
     private double total;
-
-    // Objeto que gestiona el pago de la factura
     private Pago pago;
 
-    // Constructor: inicializa fecha actual y crea un objeto Pago vacío
+    // Constructor que asigna la fecha actual e inicializa un objeto de Pago
     public Factura() {
         this.fecha = LocalDateTime.now();
         this.pago = new Pago();
@@ -39,7 +26,7 @@ public class Factura implements Serializable{
         return numeroFactura;
     }
 
-    // Establece el número de factura con validación
+    // Establece y valida el número identificador de la factura
     public void setNumeroFactura(String numeroFactura) {
         if (numeroFactura == null || numeroFactura.trim().isEmpty()) {
             throw new IllegalArgumentException("Numero de factura invalido.");
@@ -47,7 +34,7 @@ public class Factura implements Serializable{
         this.numeroFactura = numeroFactura.trim();
     }
 
-    // Obtiene la fecha de creación de la factura
+    // Obtiene la fecha y hora de emisión de la factura
     public LocalDateTime getFecha() {
         return fecha;
     }
@@ -57,7 +44,7 @@ public class Factura implements Serializable{
         return pedido;
     }
 
-    // Asigna un pedido a la factura con validación
+    // Asigna un pedido a la factura validando que no sea nulo
     public void setPedido(Pedido pedido) {
         if (pedido == null) {
             throw new IllegalArgumentException("El pedido no puede ser nulo.");
@@ -65,27 +52,27 @@ public class Factura implements Serializable{
         this.pedido = pedido;
     }
 
-    // Obtiene el subtotal calculado
+    // Obtiene el subtotal acumulado antes de aplicar descuentos
     public double getSubtotal() {
         return subtotal;
     }
 
-    // Obtiene el descuento aplicado en dinero
+    // Obtiene el monto total descontado
     public double getDescuentoAplicado() {
         return descuentoAplicado;
     }
 
-    // Obtiene el total final de la factura
+    // Obtiene el importe total a pagar
     public double getTotal() {
         return total;
     }
 
-    // Obtiene el objeto de pago asociado
+    // Obtiene el objeto de pago de la factura
     public Pago getPago() {
         return pago;
     }
 
-    // Calcula el subtotal usando el total del pedido sin descuentos
+    // Calcula el subtotal basándose en el pedido asociado
     public void calcularSubtotal() {
         if (pedido == null) {
             throw new IllegalStateException("No hay pedido asociado.");
@@ -93,35 +80,32 @@ public class Factura implements Serializable{
         this.subtotal = pedido.calcularTotalSinDescuento();
     }
 
-    // Aplica un descuento en dinero (no porcentaje)
+    // Aplica el valor del descuento comprobando que no supere el subtotal
     public void aplicarDescuento(double descuentoDinero) {
-
-        // Validación: el descuento no puede ser negativo ni mayor al subtotal
         if (descuentoDinero < 0 || descuentoDinero > subtotal) {
             throw new IllegalArgumentException("Descuento invalido.");
         }
-
         this.descuentoAplicado = descuentoDinero;
     }
 
-    // Calcula el total final después de aplicar el descuento
+    // Calcula el importe total restando el descuento del subtotal
     public void calcularTotalFinal() {
         this.total = subtotal - descuentoAplicado;
     }
 
-    // Método que ejecuta todo el proceso de cierre de factura
+    // Ejecuta el cierre de la factura calculando subtotal, descuento y total
     public void cerrarFactura(double descuentoDinero) {
-        calcularSubtotal();          // obtiene subtotal desde el pedido
-        aplicarDescuento(descuentoDinero); // aplica descuento
-        calcularTotalFinal();       // calcula total final
+        calcularSubtotal();
+        aplicarDescuento(descuentoDinero);
+        calcularTotalFinal();
     }
 
-    // Verifica si la factura ya está completamente pagada
+    // Comprueba si la factura se encuentra pagada en su totalidad
     public boolean estaPagada() {
         return pago != null && pago.esPagoCompleto(total);
     }
 
-    // Representación en texto de la factura
+    // Devuelve la representación en cadena de texto de la factura
     @Override
     public String toString() {
         return "Factura #" + numeroFactura +
@@ -131,18 +115,17 @@ public class Factura implements Serializable{
                 ", Pagada: " + estaPagada();
     }
 
-    // Hash basado en el número de factura
+    // Genera el código hash según el número de la factura
     @Override
     public int hashCode() {
         return Objects.hash(numeroFactura);
     }
 
-    // Dos facturas son iguales si tienen el mismo número de factura
+    // Compara igualdad con otra factura mediante el número identificador
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Factura)) return false;
-
         Factura other = (Factura) obj;
         return Objects.equals(numeroFactura, other.numeroFactura);
     }

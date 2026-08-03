@@ -1,7 +1,8 @@
 package GestionDelMenu;
 
-public class PlatoFuerte extends Plato{
-    //Override de la categoria de un plato con PLATO_FUERTE
+public class PlatoFuerte extends Plato {
+
+    // Retorna la categoría correspondiente a platos fuertes
     @Override
     public CategoriaPlato getCategoria() {
         return CategoriaPlato.PLATO_FUERTE;

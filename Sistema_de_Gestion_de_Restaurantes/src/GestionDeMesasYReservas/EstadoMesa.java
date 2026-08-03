@@ -1,7 +1,7 @@
 package GestionDeMesasYReservas;
 
+// Enum que representa los posibles estados de una mesa
 public enum EstadoMesa {
-    //Estados de una mesa
     LIBRE,
     OCUPADA,
     RESERVADA

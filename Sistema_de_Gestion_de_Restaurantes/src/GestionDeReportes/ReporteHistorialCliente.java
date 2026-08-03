@@ -8,87 +8,58 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ReporteHistorialCliente implements Serializable{
+public class ReporteHistorialCliente implements Serializable {
 
-    // Fecha en la que se genera el reporte
     private LocalDateTime fecha;
 
-    // Constructor: inicializa la fecha con el momento actual
+    // Constructor que inicializa la fecha actual para la generación del reporte
     public ReporteHistorialCliente() {
         this.fecha = LocalDateTime.now();
     }
 
-    // Permite obtener la fecha del reporte
+    // Obtiene la fecha y hora de emisión del reporte
     public LocalDateTime getFecha() {
         return fecha;
     }
 
-    // HISTORIAL INDIVIDUAL DE CLIENTE
-    // Devuelve todos los pedidos realizados por un cliente específico
-    public ArrayList<Pedido> obtenerHistorialCliente(ArrayList<Pedido> pedidos,
-                                                      Cliente cliente) {
-
-        // Validación de entrada
+    // Filtra y retorna los pedidos realizados por un cliente específico
+    public ArrayList<Pedido> obtenerHistorialCliente(ArrayList<Pedido> pedidos, Cliente cliente) {
         if (pedidos == null || cliente == null) {
             throw new IllegalArgumentException("Datos inválidos.");
         }
-
-        // Lista donde se guardan los pedidos del cliente
         ArrayList<Pedido> resultado = new ArrayList<>();
-
-        // Filtra pedidos que pertenezcan al cliente indicado
         for (Pedido p : pedidos) {
-
             if (p != null && cliente.equals(p.getCliente())) {
                 resultado.add(p);
             }
         }
-
         return resultado;
     }
 
-    // Devuelve el historial como texto (usado para impresión rápida)
+    // Retorna la representación en formato de texto del historial de un cliente
     public String filtrarPedidos(ArrayList<Pedido> pedidos, Cliente cliente) {
         return obtenerHistorialCliente(pedidos, cliente).toString();
     }
 
-    // REPORTE GENERAL DEL SISTEMA
-    // Genera un resumen global de clientes y consumo del restaurante
-    public String generarReporteGeneral(ArrayList<Pedido> pedidos,
-                                       ArrayList<Factura> facturas) {
-
-        // Validación de listas
+    // Genera un resumen estadístico global con clientes atendidos, consumo total y promedio
+    public String generarReporteGeneral(ArrayList<Pedido> pedidos, ArrayList<Factura> facturas) {
         if (pedidos == null || facturas == null) {
             throw new IllegalArgumentException("Listas inválidas.");
         }
-
-        // 1. Cantidad de clientes únicos que realizaron pedidos
         long clientesAtendidos = pedidos.stream()
-                .map(Pedido::getCliente)     // obtiene el cliente de cada pedido
-                .filter(Objects::nonNull)    // elimina valores nulos
-                .distinct()                  // elimina clientes repetidos
-                .count();                    // cuenta clientes únicos
-
-        // 2. Consumo total del restaurante (suma de todas las facturas)
+                .map(Pedido::getCliente)
+                .filter(Objects::nonNull)
+                .distinct()
+                .count();
         double consumoTotal = facturas.stream()
                 .mapToDouble(Factura::getTotal)
                 .sum();
-
-        // 3. Promedio de consumo por factura
-        double promedio = facturas.isEmpty()
-                ? 0
-                : consumoTotal / facturas.size();
-
-        // Construcción del reporte en texto
+        double promedio = facturas.isEmpty() ? 0 : consumoTotal / facturas.size();
         StringBuilder sb = new StringBuilder();
-
         sb.append("Clientes que comieron: ").append(clientesAtendidos).append("\n");
         sb.append("Consumo total: ").append(consumoTotal).append("\n");
         sb.append("Consumo promedio: ").append(promedio).append("\n");
-
-        // Fecha del reporte (solo día)
         sb.append("Fecha: ").append(fecha.toLocalDate()).append("\n");
-
         return sb.toString();
     }
 }

@@ -1,8 +1,9 @@
 package GestionDelMenu;
 
-public class Bebida extends Plato{
-    //Override de la categoria de plato con BEBIDA
-      @Override
+public class Bebida extends Plato {
+
+    // Retorna la categoría correspondiente a bebidas
+    @Override
     public CategoriaPlato getCategoria() {
         return CategoriaPlato.BEBIDA;
     }

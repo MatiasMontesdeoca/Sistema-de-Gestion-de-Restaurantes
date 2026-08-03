@@ -1,7 +1,7 @@
 package GestionDePedidos;
 
+// Enum que representa los estados posibles en el ciclo de vida de un pedido
 public enum EstadoPedido {
-    //Estados del pedido
     PENDIENTE,
     PREPARANDO,
     LISTO,

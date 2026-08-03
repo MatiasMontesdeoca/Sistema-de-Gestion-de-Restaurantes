@@ -21,10 +21,8 @@ import java.util.Scanner;
 
 public class Sistema_de_Gestion_de_Restaurantes {
 
+    // Método principal de entrada que carga los datos serializados e inicia el menú general del sistema
     public static void main(String[] args) {
-
-        // Listas globales compartidas por todo el sistema
-        // Aquí se almacenan todos los datos del restaurante en memoria
         ArrayList<Cliente> clientes = ArchivoDatos.cargar("clientes.dat");
         ArrayList<Mesero> meseros = ArchivoDatos.cargar("meseros.dat");
         ArrayList<Mesa> mesas = ArchivoDatos.cargar("mesas.dat");
@@ -33,54 +31,16 @@ public class Sistema_de_Gestion_de_Restaurantes {
         ArrayList<Factura> facturas = ArchivoDatos.cargar("facturas.dat");
         ArrayList<DetallePedido> detalles = new ArrayList<>();
         ArrayList<String> reportesGenerados = ArchivoDatos.cargar("reportes.dat");
-
-        // ===================== MENÚS DEL SISTEMA =====================
-
-        // Módulo de gestión de clientes (registro, búsqueda, etc.)
-        MenuGestionDeClientes menuClientes =
-                new MenuGestionDeClientes(clientes, mesas);
-
-        // Módulo de gestión de meseros (asignación de mesas, control de carga)
-        MenuGestionDeMeseros menuMeseros =
-                new MenuGestionDeMeseros(meseros, mesas);
-
-        // Módulo de mesas y reservas
-        MenuGestionDeMesasYReservas menuMesas =
-                new MenuGestionDeMesasYReservas(mesas, meseros);
-
-        // Módulo de gestión del menú (platos del restaurante)
-        MenuGestionDelMenu menuMenu =
-                new MenuGestionDelMenu(platos);
-
-        // Módulo de pedidos (crear, editar, gestionar estados)
-        MenuGestionDePedidos menuPedidos =
-                new MenuGestionDePedidos(
-                        pedidos,
-                        clientes,
-                        meseros,
-                        mesas,
-                        platos);
-
-        // Módulo de facturación y pagos
-        MenuFacturacionYPagos menuFacturacion =
-                new MenuFacturacionYPagos(pedidos, facturas, mesas);
-
-        // Módulo de reportes (ventas, platos, mesas, etc.)
-        MenuReportes menuReportes =
-                new MenuReportes(
-                        facturas,
-                        pedidos,
-                        detalles,
-                        reportesGenerados);
-
-        // Scanner principal para leer opciones del menú principal
+        MenuGestionDeClientes menuClientes = new MenuGestionDeClientes(clientes, mesas);
+        MenuGestionDeMeseros menuMeseros = new MenuGestionDeMeseros(meseros, mesas);
+        MenuGestionDeMesasYReservas menuMesas = new MenuGestionDeMesasYReservas(mesas, meseros);
+        MenuGestionDelMenu menuMenu = new MenuGestionDelMenu(platos);
+        MenuGestionDePedidos menuPedidos = new MenuGestionDePedidos(pedidos, clientes, meseros, mesas, platos);
+        MenuFacturacionYPagos menuFacturacion = new MenuFacturacionYPagos(pedidos, facturas, mesas);
+        MenuReportes menuReportes = new MenuReportes(facturas, pedidos, detalles, reportesGenerados);
         Scanner teclado = new Scanner(System.in);
-
         int opcion;
-
-        // Bucle principal del sistema (menú general)
         do {
-
             System.out.println("\n======================================");
             System.out.println(" SISTEMA DE GESTION DE RESTAURANTES");
             System.out.println("======================================");
@@ -93,40 +53,24 @@ public class Sistema_de_Gestion_de_Restaurantes {
             System.out.println("7. Reportes");
             System.out.println("8. Salir del sistema");
             System.out.print("Seleccione una opcion: ");
-
-            // Lectura segura de la opción del usuario
             try {
                 opcion = Integer.parseInt(teclado.nextLine());
             } catch (NumberFormatException e) {
-                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido" + "\n" + e.getMessage());
-                opcion = -1; // Si hay error, fuerza opción inválida
+                MensajesDeExcepciones.mostrarError("Debe ingresar un digito entero valido\n" + e.getMessage());
+                opcion = -1;
             }
-
-            // Navegación entre módulos del sistema
             switch (opcion) {
-
                 case 1 -> menuClientes.iniciarMenu();
-
                 case 2 -> menuMeseros.iniciarMenu();
-
                 case 3 -> menuMesas.iniciarMenu();
-
                 case 4 -> menuMenu.iniciarMenu();
-
                 case 5 -> menuPedidos.iniciarMenu();
-
                 case 6 -> menuFacturacion.iniciarMenu();
-
                 case 7 -> menuReportes.iniciarMenu();
-
                 case 8 -> System.out.println("Gracias por utilizar el sistema.");
-
                 default -> System.out.println("Opcion invalida.");
             }
-
         } while (opcion != 8);
-
-        // Cierre del scanner para liberar recursos
         teclado.close();
     }
 }

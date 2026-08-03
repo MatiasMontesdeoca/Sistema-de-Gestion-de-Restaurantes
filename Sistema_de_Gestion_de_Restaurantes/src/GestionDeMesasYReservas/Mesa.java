@@ -4,73 +4,55 @@ import GestionDeClientes.Cliente;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Mesa implements Serializable{
+public class Mesa implements Serializable {
 
-    // Identificador numérico de la mesa
     private int numero;
-
-    // Capacidad máxima de personas que puede tener la mesa
     private int capacidad;
-
-    // Estado actual de la mesa (LIBRE, OCUPADA, RESERVADA)
     private EstadoMesa estado;
-
-    // Reserva activa asociada a la mesa (si existe)
     private Reserva reservaActiva;
-
-    // Número de personas actualmente ocupando la mesa
     private int personasOcupando;
-
-    // Cliente actualmente sentado en la mesa
     private Cliente clienteActual;
 
-    // Constructor: inicializa la mesa como LIBRE al crearla
+    // Constructor que inicializa el estado de la mesa como LIBRE
     public Mesa() {
         this.estado = EstadoMesa.LIBRE;
     }
 
-    // Obtiene el número de la mesa
+    // Obtiene el número identificador de la mesa
     public int getNumero() {
         return numero;
     }
 
-    // Establece el número de la mesa
+    // Establece y valida el número de la mesa
     public void setNumero(int numero) {
-
         if (numero <= 0) {
             throw new IllegalArgumentException("El numero de mesa debe ser mayor a cero.");
         }
-
         this.numero = numero;
     }
 
-    // Obtiene la capacidad de la mesa
+    // Obtiene la capacidad máxima de personas de la mesa
     public int getCapacidad() {
         return capacidad;
     }
 
-    // Establece la capacidad de la mesa con validación
+    // Establece la capacidad máxima comprobando la cantidad de ocupantes actuales
     public void setCapacidad(int capacidad) {
         if (this.estado == EstadoMesa.OCUPADA && capacidad < this.personasOcupando) {
-        throw new IllegalArgumentException(
-            "No se puede reducir la capacidad a " + capacidad + 
-            " porque actualmente hay " + this.personasOcupando + " personas en la mesa."
-        );
+            throw new IllegalArgumentException("No se puede reducir la capacidad a " + capacidad + " porque actualmente hay " + this.personasOcupando + " personas en la mesa.");
+        }
+        if (capacidad <= 0) {
+            throw new IllegalArgumentException("La capacidad debe ser mayor a cero.");
+        }
+        this.capacidad = capacidad;
     }
 
-    if (capacidad <= 0) {
-        throw new IllegalArgumentException("La capacidad debe ser mayor a cero.");
-    }
-
-    this.capacidad = capacidad;
-}
-    
-    // Obtiene el estado actual de la mesa
+    // Obtiene el estado actual de la mesa (LIBRE, OCUPADA, RESERVADA)
     public EstadoMesa getEstado() {
         return estado;
     }
 
-    // Establece el estado de la mesa (LIBRE, OCUPADA, RESERVADA)
+    // Establece el estado actual de la mesa
     public void setEstado(EstadoMesa estado) {
         if (estado == null) {
             throw new IllegalArgumentException("El estado no puede ser nulo.");
@@ -78,57 +60,56 @@ public class Mesa implements Serializable{
         this.estado = estado;
     }
 
-    // Obtiene la reserva activa de la mesa
+    // Obtiene la reserva activa vinculada a la mesa
     public Reserva getReservaActiva() {
         return reservaActiva;
     }
 
-    // Asigna una reserva a la mesa y cambia su estado a RESERVADA
+    // Asigna la reserva activa y cambia el estado a RESERVADA
     public void setReservaActiva(Reserva reservaActiva) {
         this.reservaActiva = reservaActiva;
-
         if (reservaActiva != null) {
             this.estado = EstadoMesa.RESERVADA;
         }
     }
 
-    // Obtiene cuántas personas están ocupando la mesa
+    // Obtiene la cantidad de personas actualmente sentadas en la mesa
     public int getPersonasOcupando() {
         return personasOcupando;
     }
 
-    // Define cuántas personas están en la mesa
+    // Establece la cantidad de personas actualmente sentadas
     public void setPersonasOcupando(int personasOcupando) {
         this.personasOcupando = personasOcupando;
     }
 
-    // Obtiene el cliente actualmente sentado en la mesa
+    // Obtiene el cliente que ocupa actualmente la mesa
     public Cliente getClienteActual() {
         return clienteActual;
     }
 
-    // Asigna el cliente actual a la mesa
+    // Asigna el cliente que ocupará la mesa
     public void setClienteActual(Cliente clienteActual) {
         this.clienteActual = clienteActual;
     }
 
-    // Verifica si la mesa está disponible (LIBRE)
+    // Comprueba disponibilidad (reiniciando reserva activa) y retorna si está LIBRE
     public boolean estaDisponible() {
-        this.reservaActiva = null; // elimina reserva activa al consultar disponibilidad
+        this.reservaActiva = null;
         return estado == EstadoMesa.LIBRE;
     }
 
-    // Verifica si la mesa está reservada
+    // Comprueba si la mesa se encuentra en estado RESERVADA
     public boolean estaReservada() {
         return estado == EstadoMesa.RESERVADA;
     }
 
-    // Verifica si la mesa está ocupada
+    // Comprueba si la mesa se encuentra en estado OCUPADA
     public boolean estaOcupada() {
         return estado == EstadoMesa.OCUPADA;
     }
 
-    // Representación en texto de la mesa
+    // Devuelve la representación en cadena de texto de la mesa
     @Override
     public String toString() {
         return "Mesa #" + numero +
@@ -136,18 +117,17 @@ public class Mesa implements Serializable{
                ", Estado: " + estado;
     }
 
-    // Hash basado en el número de mesa (identificador único)
+    // Genera el código hash según el número de la mesa
     @Override
     public int hashCode() {
         return Objects.hash(numero);
     }
 
-    // Dos mesas son iguales si tienen el mismo número
+    // Compara la igualdad con otra mesa por su número identificador
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Mesa)) return false;
-
         Mesa other = (Mesa) obj;
         return numero == other.numero;
     }

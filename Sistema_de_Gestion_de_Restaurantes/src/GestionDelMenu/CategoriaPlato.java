@@ -1,7 +1,7 @@
 package GestionDelMenu;
 
+// Enum que define las distintas categorías de platos del menú
 public enum CategoriaPlato {
-    //Categorias de un plato
     ENTRADA,
     PLATO_FUERTE,
     POSTRE,

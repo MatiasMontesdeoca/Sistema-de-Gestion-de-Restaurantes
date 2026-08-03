@@ -4,69 +4,55 @@ import GestionDelMenu.Plato;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class DetallePedido implements Serializable{
+public class DetallePedido implements Serializable {
 
-    // Plato asociado a este detalle del pedido (qué se está ordenando)
     private Plato plato;
-
-    // Cantidad de ese plato solicitado en el pedido
     private int cantidad;
 
-    // Constructor vacío
+    // Constructor por defecto
     public DetallePedido() {
     }
 
-    // Obtiene el plato asociado al detalle del pedido
+    // Obtiene el plato asociado a este renglón de detalle
     public Plato getPlato() {
         return plato;
     }
 
-    // Asigna un plato al detalle con validación
+    // Asigna el plato al detalle comprobando que no sea nulo
     public void setPlato(Plato plato) {
-
-        // No se permite un plato nulo porque no tendría sentido en el pedido
         if (plato == null) {
             throw new IllegalArgumentException("El plato no puede ser nulo.");
         }
-
         this.plato = plato;
     }
 
-    // Obtiene la cantidad solicitada del plato
+    // Obtiene la cantidad ordenada del plato
     public int getCantidad() {
         return cantidad;
     }
 
-    // Establece la cantidad del plato con validación
+    // Establece y valida que la cantidad ordenada sea mayor a cero
     public void setCantidad(int cantidad) {
-
-        // La cantidad debe ser mayor a 0
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor a cero.");
         }
-
         this.cantidad = cantidad;
     }
 
-    // Incrementa la cantidad de platos ya agregados
+    // Incrementa la cantidad solicitada del plato en el renglón
     public void incrementarCantidad(int cantidad) {
-
-        // Validación para evitar incrementos inválidos
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad a incrementar debe ser mayor a cero.");
         }
-
         this.cantidad += cantidad;
     }
 
-    // Calcula el subtotal de este detalle (precio del plato * cantidad)
+    // Calcula el importe subtotal multiplicando el precio del plato por la cantidad
     public double calcularSubtotal() {
-
-        // Si el plato es nulo, no se puede calcular subtotal
         return plato != null ? plato.getPrecio() * cantidad : 0;
     }
 
-    // Representación en texto del detalle del pedido
+    // Devuelve la representación en cadena de texto del detalle del pedido
     @Override
     public String toString() {
         return "Plato: " + (plato != null ? plato.getNombre() : "null") +
@@ -74,21 +60,18 @@ public class DetallePedido implements Serializable{
                 ", Subtotal: " + calcularSubtotal();
     }
 
-    // Hash basado en plato y cantidad
+    // Genera el código hash del detalle del pedido
     @Override
     public int hashCode() {
         return Objects.hash(plato, cantidad);
     }
 
-    // Dos detalles se consideran iguales si corresponden al mismo plato
+    // Compara la igualdad con otro detalle en función del plato contenido
     @Override
     public boolean equals(Object obj) {
-
         if (this == obj) return true;
         if (!(obj instanceof DetallePedido)) return false;
-
         DetallePedido other = (DetallePedido) obj;
-
         return Objects.equals(plato, other.plato);
     }
 }

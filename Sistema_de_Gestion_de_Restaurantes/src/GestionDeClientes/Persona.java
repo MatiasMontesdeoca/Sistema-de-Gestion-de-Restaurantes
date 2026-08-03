@@ -1,82 +1,64 @@
- package GestionDeClientes;
- 
+package GestionDeClientes;
+
 import java.io.Serializable;
 
-public abstract class Persona implements Serializable{
+public abstract class Persona implements Serializable {
 
-    // Atributos comunes para cualquier persona del sistema
-    protected String cedula;  // Identificación única (10 dígitos)
-    protected String nombre;  // Nombre completo (nombre y apellido)
+    protected String cedula;
+    protected String nombre;
 
     // Obtiene la cédula de la persona
     public String getCedula() {
         return cedula;
     }
 
-    // Establece la cédula con validación
+    // Establece y valida el número de cédula (10 dígitos)
     public void setcedula(String cedula) {
-        // Validación de null o vacío
         if (cedula == null || cedula.isEmpty()) {
             throw new IllegalArgumentException("El codigo no puede ser nulo o vacio.");
         }
-        
         cedula = cedula.trim();
-
-        // Validación de formato: exactamente 10 dígitos numéricos
         if (!cedula.matches("\\d{10}")) {
-            throw new IllegalArgumentException(
-                "El numero de cedula ingresado debe contener 10 digitos numericos"
-            );
+            throw new IllegalArgumentException("El numero de cedula ingresado debe contener 10 digitos numericos");
         }
-
         this.cedula = cedula;
     }
 
-    // Obtiene el nombre de la persona
+    // Obtiene el nombre completo de la persona
     public String getNombre() {
         return nombre;
     }
 
-    // Establece el nombre con validación
+    // Establece y valida el nombre completo de la persona (mínimo dos palabras)
     public void setNombre(String nombre) {
-        // Validación de null o vacío
         if (nombre == null || nombre.isEmpty()) {
             throw new IllegalArgumentException("El nombre no puede ser nulo o vacío.");
         }
-        
         nombre = nombre.trim();
-
-        // Expresión regular: mínimo dos palabras (nombre + apellido)
-        // permite letras con acentos y ñ
         String regex = "^[A-Za-zÁÉÍÓÚáéíóúÑñ]+\\s+[A-Za-zÁÉÍÓÚáéíóúÑñ]+(\\s+[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$";
-
         if (!nombre.matches(regex)) {
-            throw new IllegalArgumentException(
-                "Debe ingresar nombre y apellido (solo letras, minimo dos palabras)."
-            );
+            throw new IllegalArgumentException("Debe ingresar nombre y apellido (solo letras, minimo dos palabras).");
         }
-
         this.nombre = nombre;
     }
 
-    // Representación en texto del objeto Persona
+    // Devuelve la representación en cadena de texto de la persona
     @Override
     public String toString() {
         return "cedula: " + cedula + ", Nombre: " + nombre;
     }
 
-    // Hash basado en la cédula (identificador único)
+    // Genera el código hash según la cédula
     @Override
     public int hashCode() {
         return cedula != null ? cedula.hashCode() : 0;
     }
 
-    // Dos personas son iguales si tienen la misma cédula y mismo tipo de clase
+    // Compara igualdad con otra persona mediante la cédula
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-
         Persona other = (Persona) obj;
         return cedula != null && cedula.equals(other.cedula);
     }
