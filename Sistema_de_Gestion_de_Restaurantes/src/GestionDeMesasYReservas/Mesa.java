@@ -1,9 +1,10 @@
 package GestionDeMesasYReservas;
 
 import GestionDeClientes.Cliente;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Mesa {
+public class Mesa implements Serializable{
 
     // Identificador numérico de la mesa
     private int numero;

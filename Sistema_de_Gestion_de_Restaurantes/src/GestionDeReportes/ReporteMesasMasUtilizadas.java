@@ -2,13 +2,14 @@ package GestionDeReportes;
 
 import GestionDePedidos.Pedido;
 import GestionDeMesasYReservas.Mesa;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class ReporteMesasMasUtilizadas {
+public class ReporteMesasMasUtilizadas implements Serializable{
 
     // Fecha en la que se genera el reporte
     private LocalDateTime fecha;

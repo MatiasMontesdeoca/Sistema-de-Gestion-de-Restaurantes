@@ -5,7 +5,9 @@ import ExcepcionesPersonalizadas.MetodoDePagoInvalidoException;
 import GestionDePedidos.Pedido;
 import GestionDePedidos.EstadoPedido;
 import GestionDeMesasYReservas.EstadoMesa;
+import GestionDeMesasYReservas.Mesa;
 import GestionDeClientes.Cliente;
+import Serializacion.ArchivoDatos;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,6 +16,9 @@ public class MenuFacturacionYPagos {
 
     // Lista de pedidos activos o registrados en el sistema
     private ArrayList<Pedido> pedidos;
+    
+    // Lista de mesas en el sistema
+    private ArrayList<Mesa> mesas;
 
     // Scanner usado para lectura de datos del usuario
     private Scanner teclado;
@@ -24,13 +29,15 @@ public class MenuFacturacionYPagos {
     // Segundo Scanner (redundante, pero usado en algunos métodos)
     private Scanner sc;
 
-    // Constructor: recibe listas existentes de pedidos y facturas
+    // Constructor: recibe listas existentes de pedidos, facturas y mesas
     public MenuFacturacionYPagos(ArrayList<Pedido> pedidos,
-                                 ArrayList<Factura> facturas) {
+                                 ArrayList<Factura> facturas,
+                                 ArrayList<Mesa> mesas) {
 
         this.teclado = new Scanner(System.in);
         this.pedidos = pedidos;
         this.facturas = facturas;
+        this.mesas = mesas;
         this.sc = new Scanner(System.in);
     }
 
@@ -156,12 +163,14 @@ public class MenuFacturacionYPagos {
         System.out.println("1. Efectivo");
         System.out.println("2. Tarjeta");
         System.out.println("3. Transferencia");
-       
-        try{
+
+        try {
+
             int op = leerEntero();
 
             if (op < 1 || op > 3) {
-               throw new MetodoDePagoInvalidoException("Metodo de pago no aceptado, seleccione otro");
+                throw new MetodoDePagoInvalidoException(
+                        "Metodo de pago no aceptado, seleccione otro");
             }
 
             // Creación de la factura
@@ -184,16 +193,23 @@ public class MenuFacturacionYPagos {
 
             // Guardar factura en el sistema
             facturas.add(factura);
+            ArchivoDatos.guardar(facturas, "facturas.dat");
 
             // Cambiar estado del pedido a pagado
             pedido.cambiarEstado(EstadoPedido.PAGADO);
+            ArchivoDatos.guardar(pedidos, "pedidos.dat");
 
             // Liberar la mesa
             pedido.getMesa().setEstado(EstadoMesa.LIBRE);
+            ArchivoDatos.guardar(mesas, "mesas.dat");
 
             System.out.println("Pago realizado. Factura generada.");
-        } catch(MetodoDePagoInvalidoException e){
-            MensajesDeExcepciones.mostrarAdvertencia("El metodo de pago seleccionado no es valido, porfavor seleccione un metodo de pago valido" + "\n" + e.getMessage());
+
+        } catch (MetodoDePagoInvalidoException e) {
+
+            MensajesDeExcepciones.mostrarAdvertencia(
+                    "El metodo de pago seleccionado no es valido, por favor seleccione un metodo de pago valido."
+                    + "\n" + e.getMessage());
             return;
         }
     }

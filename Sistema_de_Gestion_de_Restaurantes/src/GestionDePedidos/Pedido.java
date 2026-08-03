@@ -4,11 +4,12 @@ import GestionDelMenu.Plato;
 import GestionDeMesasYReservas.Mesa;
 import GestionDeMeseros.Mesero;
 import GestionDeClientes.Cliente;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Pedido {
+public class Pedido implements Serializable{
 
     // Identificador único del pedido
     private String numeroPedido;

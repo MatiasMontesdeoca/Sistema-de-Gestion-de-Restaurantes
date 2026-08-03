@@ -3,11 +3,12 @@ package GestionDeReportes;
 import GestionDeFacturasYPagos.Factura;
 import GestionDePedidos.Pedido;
 import GestionDeClientes.Cliente;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ReporteHistorialCliente {
+public class ReporteHistorialCliente implements Serializable{
 
     // Fecha en la que se genera el reporte
     private LocalDateTime fecha;

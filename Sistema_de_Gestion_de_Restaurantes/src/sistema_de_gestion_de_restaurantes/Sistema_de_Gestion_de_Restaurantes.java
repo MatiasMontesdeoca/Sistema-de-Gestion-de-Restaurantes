@@ -15,6 +15,7 @@ import GestionDeMeseros.MenuGestionDeMeseros;
 import GestionDeMeseros.Mesero;
 import GestionDeClientes.MenuGestionDeClientes;
 import GestionDeClientes.Cliente;
+import Serializacion.ArchivoDatos;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -24,13 +25,13 @@ public class Sistema_de_Gestion_de_Restaurantes {
 
         // Listas globales compartidas por todo el sistema
         // Aquí se almacenan todos los datos del restaurante en memoria
-        ArrayList<Cliente> clientes = new ArrayList<>();
-        ArrayList<Mesero> meseros = new ArrayList<>();
-        ArrayList<Mesa> mesas = new ArrayList<>();
-        ArrayList<Plato> platos = new ArrayList<>();
-        ArrayList<Pedido> pedidos = new ArrayList<>();
-        ArrayList<Factura> facturas = new ArrayList<>();
-        ArrayList<DetallePedido> detalles = new ArrayList<>();
+        ArrayList<Cliente> clientes = ArchivoDatos.cargar("clientes.dat");
+        ArrayList<Mesero> meseros = ArchivoDatos.cargar("meseros.dat");
+        ArrayList<Mesa> mesas = ArchivoDatos.cargar("mesas.dat");
+        ArrayList<Plato> platos = ArchivoDatos.cargar("platos.dat");
+        ArrayList<Pedido> pedidos = ArchivoDatos.cargar("pedidos.dat");
+        ArrayList<Factura> facturas = ArchivoDatos.cargar("facturas.dat");
+        ArrayList<DetallePedido> detalles = ArchivoDatos.cargar("detalles.dat");
 
         // Se crean 10 mesas iniciales con números del 1 al 10
         // Estas mesas forman la configuración base del restaurante
@@ -69,7 +70,7 @@ public class Sistema_de_Gestion_de_Restaurantes {
 
         // Módulo de facturación y pagos
         MenuFacturacionYPagos menuFacturacion =
-                new MenuFacturacionYPagos(pedidos, facturas);
+                new MenuFacturacionYPagos(pedidos, facturas, mesas);
 
         // Módulo de reportes (ventas, platos, mesas, etc.)
         MenuReportes menuReportes =

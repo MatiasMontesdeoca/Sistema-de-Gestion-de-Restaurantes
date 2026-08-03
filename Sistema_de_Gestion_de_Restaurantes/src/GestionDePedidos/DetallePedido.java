@@ -1,9 +1,10 @@
 package GestionDePedidos;
 
 import GestionDelMenu.Plato;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class DetallePedido {
+public class DetallePedido implements Serializable{
 
     // Plato asociado a este detalle del pedido (qué se está ordenando)
     private Plato plato;

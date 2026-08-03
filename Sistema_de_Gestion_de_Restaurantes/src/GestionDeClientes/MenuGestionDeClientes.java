@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMesasYReservas.Mesa;
+import Serializacion.ArchivoDatos;
 
 public class MenuGestionDeClientes {
 
@@ -135,6 +136,7 @@ public class MenuGestionDeClientes {
 
         // Agrega cliente a la lista
         clientes.add(c);
+        ArchivoDatos.guardar(clientes, "clientes.dat");
         System.out.println("Cliente registrado correctamente.");
     }
 
@@ -197,8 +199,14 @@ public class MenuGestionDeClientes {
         mesa.setPersonasOcupando(personas);
         mesa.setClienteActual(cliente);
 
+        // Guardar cambio de la mesa
+        ArchivoDatos.guardar(mesas, "mesas.dat");
+
         // Incrementar visitas del cliente automáticamente
         cliente.incrementarVisitas();
+
+        // Guardar cambio del cliente
+        ArchivoDatos.guardar(clientes, "clientes.dat");
 
         System.out.println("Cliente sentado correctamente en la mesa.");
     }

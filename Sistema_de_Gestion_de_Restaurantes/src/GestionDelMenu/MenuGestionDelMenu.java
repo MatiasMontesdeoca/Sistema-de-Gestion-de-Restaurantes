@@ -2,6 +2,7 @@ package GestionDelMenu;
 
 import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import ExcepcionesPersonalizadas.PlatoDuplicadoException;
+import Serializacion.ArchivoDatos;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -159,7 +160,7 @@ public class MenuGestionDelMenu {
 
             // Se agrega a la lista global de platos
             platos.add(plato);
-
+            ArchivoDatos.guardar(platos, "platos.dat");
             System.out.println("Plato registrado correctamente.");
 
         } catch (IllegalArgumentException e) {
@@ -241,6 +242,7 @@ public class MenuGestionDelMenu {
                             System.out.println("Ya existe un plato con ese nombre.");
                         } else {
                             plato.setNombre(nuevoNombre);
+                            ArchivoDatos.guardar(platos, "platos.dat");
                             System.out.println("Nombre actualizado.");
                         }
                     }
@@ -248,17 +250,20 @@ public class MenuGestionDelMenu {
                     case 2 -> {
                         System.out.print("Nuevo precio: ");
                         plato.setPrecio(leerDouble());
+                        ArchivoDatos.guardar(platos, "platos.dat");
                         System.out.println("Precio actualizado.");
                     }
 
                     case 3 -> {
                         System.out.print("Nuevo estado (Disponible/Agotado): ");
                         plato.setDisponibilidad(leerboolean());
+                        ArchivoDatos.guardar(platos, "platos.dat");
                         System.out.println("Disponibilidad actualizada.");
                     }
 
                     case 4 -> {
                         platos.remove(plato);
+                        ArchivoDatos.guardar(platos, "platos.dat");
                         System.out.println("Plato eliminado.");
                         op = 5;
                     }

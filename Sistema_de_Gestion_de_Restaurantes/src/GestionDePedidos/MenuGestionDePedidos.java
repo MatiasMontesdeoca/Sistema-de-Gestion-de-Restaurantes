@@ -6,6 +6,7 @@ import GestionDeMesasYReservas.Mesa;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMeseros.Mesero;
 import GestionDeClientes.Cliente;
+import Serializacion.ArchivoDatos;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -154,6 +155,8 @@ public class MenuGestionDePedidos {
         int cantidad = leerEntero();
 
         pedido.agregarPlato(plato, cantidad);
+        ArchivoDatos.guardar(pedidos, "pedidos.dat");
+        System.out.println("Plato agregado correctamente");
     }
 
     // Busca un plato por nombre dentro del menú
@@ -183,7 +186,7 @@ public class MenuGestionDePedidos {
         }
 
         pedido.eliminarPlato(plato);
-
+        ArchivoDatos.guardar(pedidos, "pedidos.dat");
         System.out.println("Plato eliminado del pedido.");
     }
 
@@ -206,7 +209,7 @@ public class MenuGestionDePedidos {
             // Valida si la transición de estado es válida antes de cambiarlo
             pedido.validarTransicionEstado(nuevoEstado);
             pedido.cambiarEstado(nuevoEstado);
-
+            ArchivoDatos.guardar(pedidos, "pedidos.dat");
             System.out.println("Estado actualizado.");
 
         } catch (IllegalArgumentException e) {
@@ -253,6 +256,8 @@ public class MenuGestionDePedidos {
         pedido.setCliente(mesa.getClienteActual());
 
         pedidos.add(pedido);
+        
+        ArchivoDatos.guardar(pedidos, "pedidos.dat");
 
         System.out.println("Pedido creado: " + pedido.getNumeroPedido());
     }

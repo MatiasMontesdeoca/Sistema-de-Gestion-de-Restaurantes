@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import GestionDeMesasYReservas.EstadoMesa;
 import GestionDeMesasYReservas.Mesa;
+import Serializacion.ArchivoDatos;
 
 
 public class MenuGestionDeMeseros {
@@ -142,6 +143,7 @@ public class MenuGestionDeMeseros {
         }
 
         meseros.add(mesero);
+        ArchivoDatos.guardar(meseros, "meseros.dat");
         System.out.println("Mesero registrado correctamente");
     }
 
@@ -228,6 +230,10 @@ public class MenuGestionDeMeseros {
             mesero.getHistorialMesas().add(mesa);
 
             mesero.incrementarPersonasAtendidas(personas);
+            
+            ArchivoDatos.guardar(meseros, "meseros.dat");
+            
+            ArchivoDatos.guardar(mesas, "mesas.dat");
 
             System.out.println("Mesa asignada correctamente.");
 
@@ -268,7 +274,8 @@ public class MenuGestionDeMeseros {
             }
 
             mesero.retirarMesa(mesa);
-
+            ArchivoDatos.guardar(meseros, "meseros.dat");
+            ArchivoDatos.guardar(mesas, "mesas.dat");
             System.out.println("Mesa retirada del mesero correctamente.");
 
         } catch (NumberFormatException e) {

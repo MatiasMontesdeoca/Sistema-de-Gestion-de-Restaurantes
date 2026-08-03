@@ -1,10 +1,11 @@
 package GestionDeReportes;
 
 import GestionDeFacturasYPagos.Factura;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class ReporteVentas {
+public class ReporteVentas implements Serializable{
 
     // Fecha en la que se genera el reporte de ventas
     private LocalDateTime fecha;

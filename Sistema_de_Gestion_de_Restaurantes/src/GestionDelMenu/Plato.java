@@ -1,8 +1,9 @@
 package GestionDelMenu;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class Plato {
+public abstract class Plato implements Serializable{
 
     // Nombre del plato (identificador principal)
     protected String nombre;

@@ -4,10 +4,11 @@ import GestionDePedidos.Pedido;
 import GestionDePedidos.DetallePedido;
 import GestionDelMenu.Plato;
 import GestionDelMenu.CategoriaPlato;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class ReportePlatosMasVendidos {
+public class ReportePlatosMasVendidos implements Serializable{
 
     // Fecha en la que se genera el reporte
     private LocalDateTime fecha;

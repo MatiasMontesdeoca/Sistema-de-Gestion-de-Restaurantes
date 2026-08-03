@@ -1,9 +1,10 @@
 package GestionDeMesasYReservas;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class Reserva {
+public class Reserva implements Serializable{
 
     // Nombre del cliente que realiza la reserva
     private String nombreCliente;

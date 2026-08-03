@@ -1,6 +1,8 @@
  package GestionDeClientes;
+ 
+import java.io.Serializable;
 
-public abstract class Persona {
+public abstract class Persona implements Serializable{
 
     // Atributos comunes para cualquier persona del sistema
     protected String cedula;  // Identificación única (10 dígitos)

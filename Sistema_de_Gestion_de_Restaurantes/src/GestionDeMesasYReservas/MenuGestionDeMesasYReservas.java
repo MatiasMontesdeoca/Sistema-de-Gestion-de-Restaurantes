@@ -4,6 +4,7 @@ import ExcepcionesPersonalizadas.MensajesDeExcepciones;
 import ExcepcionesPersonalizadas.MesaDuplicadaException;
 import ExcepcionesPersonalizadas.MesaReservadaException;
 import GestionDeMeseros.Mesero;
+import Serializacion.ArchivoDatos;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -161,7 +162,7 @@ public class MenuGestionDeMesasYReservas {
             }
 
             mesas.add(mesa);
-
+            ArchivoDatos.guardar(mesas, "mesas.dat");
             System.out.println("Mesa registrada correctamente.");
             
         } catch(MesaDuplicadaException e){
@@ -242,6 +243,7 @@ public class MenuGestionDeMesasYReservas {
                     // Cambiar capacidad de la mesa
                     System.out.print("Nueva capacidad: ");
                     mesa.setCapacidad(leerEntero());
+                    ArchivoDatos.guardar(mesas, "mesas.dat");
                     System.out.println("Capacidad actualizada.");
                     break;
 
@@ -252,12 +254,14 @@ public class MenuGestionDeMesasYReservas {
                     mesa.setPersonasOcupando(0);
                     mesa.setReservaActiva(null);
                     mesa.setClienteActual(null);
+                    ArchivoDatos.guardar(mesas, "mesas.dat");
 
                     // Quitar mesa del mesero si estaba asignada
                     Mesero mesero = buscarMeseroPorMesa(mesa);
 
                     if (mesero != null) {
                         mesero.retirarMesa(mesa);
+                        ArchivoDatos.guardar(meseros, "meseros.dat");
                     }
 
                     System.out.println("Mesa liberada correctamente.");
@@ -307,7 +311,7 @@ public class MenuGestionDeMesasYReservas {
 
             // Asignar reserva a la mesa
             mesa.setReservaActiva(reserva);
-
+            ArchivoDatos.guardar(mesas, "mesas.dat");
             System.out.println("Reserva registrada correctamente.");
 
         } catch (IllegalArgumentException e) {
@@ -335,7 +339,7 @@ public class MenuGestionDeMesasYReservas {
         }
 
         mesas.remove(mesa);
-
+        ArchivoDatos.guardar(mesas, "mesas.dat");
         System.out.println("Mesa eliminada correctamente.");
     }
 }
